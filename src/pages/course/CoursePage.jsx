@@ -1,11 +1,11 @@
 import { Box, Flex, Text, VStack, Link } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import sharedCourseAtom from "../../atoms/sharedCourseAtom";
 import userAtom from "../../atoms/userAtom";
-
+import { getUser } from "../../libs/Methods";
 const courses = [
   {
     id: 1,
@@ -65,9 +65,16 @@ const courses = [
 
 const CoursePage = () => {
   const { id } = useParams();
-  const user = useRecoilValue(userAtom);
+  const [user,setUser] = useState(null);
   const sharedCourse = useRecoilValue(sharedCourseAtom);
   const course = courses.find(course => course.id === parseInt(id)) || sharedCourse;
+
+  if(localStorage.getItem("user_id")){
+    getUser({ "_id": localStorage.getItem("user_id") })
+    .then(data => {
+      setUser(data.data[0])
+    })
+  }
 
   if (!course) {
     return <Text>Course not found</Text>;

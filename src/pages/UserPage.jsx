@@ -7,7 +7,7 @@ import Post from "../components/Post";
 import { getPost, getUser } from "../libs/Methods";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
-
+import CreatePost from "../components/CreatePost";
 const UserPage = () => {
     const { username } = useParams();
     const showToast = useShowToast();
@@ -69,6 +69,7 @@ const UserPage = () => {
                     <Post key={post._id} post={post} user={user} />
                 ))
             )}
+            <CreatePost />
         </>
     );
 };

@@ -8,7 +8,6 @@ import ForumPage from "./pages/ForumPage";
 import { useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
-import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import CourseListPage from './pages/course/CourseListPage'
 import CoursePage from "./pages/course/CoursePage";
@@ -50,7 +49,7 @@ function App() {
 					<Route path="/about" element={<AboutPage />} />
 					<Route path="/contact" element={<ContactPage />} />
 					<Route path="/" element={<WelcomePage />} />
-					<Route path='/user/:username' element={user ? (<> <UserPage /> <CreatePost /> </>) : (<UserPage />)} />
+					<Route path='/user/:username' element={<UserPage />} />
 					<Route path='/:username/post/:pid' element={<PostPage />} />
 					<Route path='/chat' element={user ? <ChatPage /> : <Navigate to="/login" />} />
 					<Route path='/course/list' element={<CourseListPage />} />
