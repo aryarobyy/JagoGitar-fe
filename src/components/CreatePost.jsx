@@ -34,12 +34,20 @@ const MAX_CHAR = 500;
 const CreatePost = () => {
 	const [users, setUsers] = useState(null);
 
-	if(localStorage.getItem("user_id")){
-		getUser({ "_id": localStorage.getItem("user_id") })
-		.then(data => {
-			setUsers(data.data[0])
-		})
-	}
+	useEffect(() => {
+		const fetchUser = async () => {
+			if (localStorage.getItem("user_id")) {
+				try {
+					const data = await getUser({ "_id": localStorage.getItem("user_id") });
+					setUsers(data.data[0]);
+				} catch (error) {
+					console.error("Error fetching user:", error);
+				}
+			}
+		};
+
+		fetchUser();
+	}, []);
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
@@ -60,12 +68,11 @@ const CreatePost = () => {
 
 	useEffect(() => {
 		if (user && user.data && user.data[0]) {
-			setInputs({
+			setInputs((inputs) => ({
+				...inputs,
 				user_id: user.data[0]._id,
 				postedBy: user.data[0].username,
-				text: "",
-				img: "null",
-			});
+			}));
 		}
 	}, [user]);
 
@@ -97,7 +104,7 @@ const CreatePost = () => {
 					setPosts([data, ...posts]);
 				}
 				onClose();
-				setInputs({ user_id: user.data[0]._id, text: "", img: "" });
+				setInputs({ user_id: user.data[0]._id, postedBy: user.data[0].username, text: "", img: "" });
 				setImgUrl("");
 			})
 			.catch((error) => {
@@ -115,11 +122,12 @@ const CreatePost = () => {
 			<>
 				<Button
 					position={"fixed"}
-					bottom={10}
-					right={5}
+					bottom={20}
+					right={6}
 					bg={useColorModeValue("gray.300", "gray.dark")}
 					onClick={onOpen}
-					size={{ base: "sm", sm: "md" }}
+					w={{ base: 7, sm: 8, md: 9, lg: 12 }}
+					h={{ base: 7, sm: 8, md: 9, lg: 12 }}
 				>
 					<AddIcon />
 				</Button>

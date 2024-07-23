@@ -8,6 +8,8 @@ import { getPost, getUser } from "../libs/Methods";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
 import CreatePost from "../components/CreatePost";
+import LoginPage from "./auth/LoginPage"
+
 const UserPage = () => {
     const { username } = useParams();
     const showToast = useShowToast();
@@ -57,6 +59,7 @@ const UserPage = () => {
 
     return (
         <>
+            {!user && <LoginPage />}
             {user && <UserHeader user={user} />}
             {fetchingPosts ? (
                 <Flex justifyContent={"center"} my={12}>

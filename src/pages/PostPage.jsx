@@ -9,33 +9,59 @@ import { formatDistanceToNow } from "date-fns";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { getPost, deletePost } from "../libs/Methods";
+import { getPost, deletePost, getUser } from "../libs/Methods";
 
 const PostPage = () => {
-    const { pid,username } = useParams();  
+    const { pid, username } = useParams();  
     const { user } = useGetUserProfile();
     const [post, setPost] = useState(null); 
+    const [postAuthor, setPostAuthor] = useState(null);
     const showToast = useShowToast();
     const navigate = useNavigate();
     const loggedInUser = useRecoilValue(userAtom);
-	
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 const postResponse = await getPost({ _id: pid });
-				console.log("Post Response: ", postResponse)
                 if (postResponse.error) {
                     showToast("Error", postResponse.error, "error");
                     return;
                 }
-                setPost(postResponse.data[0]);
+    
+                const post = postResponse.data[0];
+                setPost(post);
+                
+                // Extract user_id from the post
+                const userId = post.user_id;
+                if (!userId) {
+                    showToast("Error", "No user ID found in post", "error");
+                    return;
+                }
+    
+                // Fetch user details for the user_id
+                const userResponse = await getUser({ _id: userId });
+                if (userResponse.error) {
+                    showToast("Error", userResponse.error, "error");
+                    return;
+                }
+
+                const user = userResponse.data[0];
+                if (!user) {
+                    showToast("Error", "User not found", "error");
+                    return;
+                }
+
+                setPostAuthor(user); 
+    
             } catch (error) {
                 showToast("Error", error.message, "error");
             }
         };
+    
         fetchPost();
     }, [pid, showToast]);
+    
 
     const handleDeletePost = async () => {
         try {
@@ -46,7 +72,6 @@ const PostPage = () => {
                 return;
             }
             showToast("Success", "Post deleted", "success");
-            // navigate(`/${user[0].username}`);
             navigate(`/${user && user[0] ? user[0].username : ''}`);
         } catch (error) {
             showToast("Error", error.message, "error");
@@ -66,9 +91,9 @@ const PostPage = () => {
         <Box p={4}>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
                 <Flex alignItems="center" gap={3}>
-                    <Avatar src={post.userProfilePic} size="md" name={user.photo} />
+                    <Avatar src={postAuthor?.profilePic} size="md" name={postAuthor?.username} />
                     <Flex flexDirection="column">
-                        <Text fontSize="sm" fontWeight="bold">{user.username}</Text>
+                        <Text fontSize="sm" fontWeight="bold">{postAuthor?.username || "Unknown User"}</Text>
                         <Image src='/verified.png' w={4} h={4} />
                     </Flex>
                 </Flex>
@@ -89,10 +114,6 @@ const PostPage = () => {
                     <Image src={post.img} w="full" />
                 </Box>
             )}
-
-            <Flex gap={3} my={3}>
-                <Actions post={post} />
-            </Flex>
 
             <Divider my={4} />
 

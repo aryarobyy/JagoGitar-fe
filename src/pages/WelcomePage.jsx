@@ -62,7 +62,7 @@ const WelcomePage = () => {
                     )}
                     {user && (
                         <Link as={RouterLink} to='/forum'>
-                            <Button bg={"orange.medium"} color={"white"}>Forum</Button>
+                            <Button bg={"orange.medium"} _hover={"transparent"} color={"white"}>Forum</Button>
                         </Link>
                     )}
                 </Box>

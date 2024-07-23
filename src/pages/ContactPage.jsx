@@ -48,10 +48,10 @@ const ContactUs = () => {
           <Button
 								loadingText="Logging in"
 								size="lg"
-								bg={useColorModeValue("#E87B3DB2")}
+								bg={"orange.pale"}
 								color={"white"}
 								_hover={{
-									bg: useColorModeValue("orange.medium"),
+									bg:"orange.medium",
 								}}
 							>Send Message</Button>
         </VStack>

@@ -1,5 +1,3 @@
-
-
 import { Button, Flex, Box, Image, Link, Container, Menu, MenuButton, IconButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -60,7 +58,7 @@ const Navbar = () => {
             </Flex>
             <Flex justifyContent={"space-between"} mt={9} mb='12vh'>
                 <Flex color="white" justify="center">
-                    <Flex justify="space-between" align="center" w="full" p={4}>
+                    <Flex justify="space-between" align="center" w="full" p={2}>
                         <Link as={RouterLink} to="/" mx={4}>
                             <Button _hover={"transparent"} bg={"orange.medium"} color={"white"}>
                                 Home
