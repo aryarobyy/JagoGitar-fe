@@ -42,7 +42,7 @@ export default function SignupPage() {
 		.then(data => {
 			console.log('User creation response:', data);
 			if (data.status = 201) {
-				navigate("/")
+				navigate("/login")
 				localStorage.setItem("user_id", data.data[0]._id);
 				showToast("Success", "User created successfully!", "success");
 				setUser(data);
@@ -52,11 +52,6 @@ export default function SignupPage() {
 			}
 			console.log(data)
 		})
-		// .catch(error => {
-		// 	console.error('Error creating user:', error);
-		// 	showToast("Error", "Failed to create user. Please try again later.", "error");
-		// });
-
 	};
 
 	return (

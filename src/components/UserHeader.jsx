@@ -12,7 +12,7 @@ import follow from "../hooks/useFollowUnfollow";
 import CustomButton from "../utils/CustomButton";
 // import UserLiked from "./UserLiked";
 import Post from "./Post";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getFollow } from "../libs/Methods";
 
 const UserHeader = ({ user }) => {
@@ -20,11 +20,19 @@ const UserHeader = ({ user }) => {
     const currentUser = user;
     const my_id = localStorage.getItem("user_id")
     const [following,setFollowing] = useState(false)
-    const [activeTab, setActiveTab] = useState("posts");
+    const [activeTab, setActiveTab] = useState("posts","likes");
 
-    getFollow({ user_id: my_id,following: user._id }).then((data) => {
-        if(data.status == 200) setFollowing(true)
-    })
+    // getFollow({ user_id: my_id,following: user._id }).then((data) => {
+    //     if(data.status == 200) setFollowing(true)
+    // })
+
+    useEffect(() => {
+        if (user && user._id) {
+            getFollow({ user_id: my_id, following: user._id }).then((data) => {
+                if (data.status === 200) setFollowing(true);
+            });
+        }
+    }, [user]);
 
     const handleFollow = () => {
         follow(currentUser,my_id,setFollowing)
@@ -42,6 +50,10 @@ const UserHeader = ({ user }) => {
             });
         });
     };
+
+    if (!user) {
+        return <Text>Loading...</Text>;
+    }
 
     return (
         <VStack gap={4} alignItems={"start"}>
@@ -142,7 +154,7 @@ const UserHeader = ({ user }) => {
                 </Flex>
             </Flex>
 
-            {activeTab === "posts" && <Post />}
+            {/* {activeTab === "posts" && <Post />} */}
             {activeTab === "likes" && <UserLiked />}
         </VStack>
     );

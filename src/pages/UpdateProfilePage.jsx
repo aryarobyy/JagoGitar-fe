@@ -1,64 +1,88 @@
 import {
-	Button,
-	Flex,
-	FormControl,
-	FormLabel,
-	Heading,
-	Input,
-	Stack,
-	useColorModeValue,
-	Avatar,
-	Center,
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    Heading,
+    Input,
+    Stack,
+    useColorModeValue,
+    Avatar,
+    Center,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
+import { updateUser } from "../libs/Methods";
+import useGetUserProfile from "../hooks/useGetUserProfile";
 
 export default function UpdateProfilePage() {
-	const [user, setUser] = useRecoilState(userAtom);
+    const { user, loading } = useGetUserProfile();
 	const [inputs, setInputs] = useState({
-		name: user.name,
-		username: user.username,
-		email: user.email,
-		bio: user.bio,
-		password: "",
-	});
-	const fileRef = useRef(null);
-	const [updating, setUpdating] = useState(false);
+        name: "",
+        username: "",
+        email: "",
+        bio: "",
+        password: "",
+    });
 
-	const showToast = useShowToast();
+    const fileRef = useRef(null);
+    const [updating, setUpdating] = useState(false);
+    const [users, setUsers] = useRecoilState(userAtom);
 
-	const { handleImageChange, imgUrl } = usePreviewImg();
+    const showToast = useShowToast();
+    const { handleImageChange, imgUrl } = usePreviewImg();
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (updating) return;
-		setUpdating(true);
-		try {
-			const res = await fetch(`https://orchid-sulfuric-reaction.glitch.me/user/${user._id}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
-			});
-			const data = await res.json(); // updated user object
-			if (data.error) {
-				showToast("Error", data.error, "error");
-				return;
-			}
-			showToast("Success", "Profile updated successfully", "success");
-			setUser(data);
-			localStorage.setItem("user_id", data.data[0]._id);
-		} catch (error) {
-			showToast("Error", error, "error");
-		} finally {
-			setUpdating(false);
-		}
-	};
-	return (
+
+	useEffect(() => {
+        if (user && user[0]) {
+            const iniUser = user[0];
+            setInputs({
+                name: iniUser.name || "",
+                username: iniUser.username || "",
+                email: iniUser.email || "",
+                bio: iniUser.bio || "",
+                password: "",
+            });
+        }
+    }, [user]);
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (updating) return;
+        setUpdating(true);
+
+        updateUser(user[0]._id, inputs)
+            .then((data) => {
+                if (data.error) {
+                    showToast("Error", data.error, "error");
+                    setUpdating(false);
+                    return;
+                }
+                showToast("Success", "Profile updated successfully", "success");
+                setUsers(data.config.data);
+                localStorage.setItem("user_id", data.data[0]._id);
+            })
+            .catch((error) => {
+                showToast("Error", error.toString(), "error");
+            })
+            .finally(() => {
+                setUpdating(false);
+            });
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!user || !user[0]) {
+        return <div>No user data available</div>;
+    }
+
+    return (
 		<form onSubmit={handleSubmit}>
 			<Flex align={"center"} justify={"center"} my={6}>
 				<Stack
@@ -163,5 +187,5 @@ export default function UpdateProfilePage() {
 				</Stack>
 			</Flex>
 		</form>
-	);
+    );
 }

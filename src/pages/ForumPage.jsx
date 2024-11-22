@@ -1,87 +1,71 @@
 import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
 import Post from "../components/Post";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
 import { getPost } from "../libs/Methods";
+import useGetUserProfile from "../hooks/useGetUserProfile";
 
 const ForumPage = () => {
-	const [posts, setPosts] = useRecoilState(postsAtom);
-	const [loading, setLoading] = useState(true);
-	const showToast = useShowToast();
+    const { pid } = useParams();  // Get the post ID from URL parameters
+    const [posts, setPosts] = useRecoilState(postsAtom);
+    const showToast = useShowToast();
+    const { user, loading} = useGetUserProfile();
 
-	useEffect(() => {
-		setLoading(true);
-		getPost({ _id: posts })
-			.then(data => {
-				if (data.error) {
-					showToast("Error", data.error, "error");
-					setLoading(false); 
-					return;
-				}
-				console.log(data);
-				setPosts(data.posts || []);
-			})
-			.catch(error => {
-				showToast("Error", error.message, "error");
-			})
-			.finally(() => {
-				setLoading(false); 
-			});
-	}, [showToast, setPosts]);
+    console.log("Ini user: ",user)
 
-	return (
-		// <Flex gap='10' alignItems={"flex-start"}>
-		// 	<Box flex={70}>
-		// 		{!loading && posts.length === 0 && <h1>Follow some users to see the feed</h1>}
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const postResponse = await getPost({ _id: pid });
+                console.log("Post Response: ", postResponse.data);
+                if (postResponse.error) {
+                    showToast("Error", postResponse.error, "error");
+                    return;
+                }
+                // if (Array.isArray(postResponse.data)) {
+                //     setPosts(postResponse.data);
+                // } 
+                setPosts(Array.isArray(postResponse.data) ? postResponse.data : [postResponse.data]);
+            } catch (error) {
+                showToast("Error", error.message, "error");
+                // setLoading(false);
+            }
+        };
+        fetchPost();
+    }, [pid, showToast, setPosts]);
 
-		// 		{loading && (
-		// 			<Flex justify='center'>
-		// 				<Spinner size='xl' />
-		// 			</Flex>
-		// 		)}
+    if (loading) {
+        return (
+            <Flex justify='center' align='center' h='100vh'>
+                <Spinner size='xl' />
+            </Flex>
+        );
+    }
 
-		// 		{!loading && posts.map((post) => (
-		// 			<Post key={post.id} post={post} postedBy={post.postedBy} />
-		// 		))}
-		// 	</Box>
-		// 	<Box
-		// 		flex={30}
-		// 		display={{
-		// 			base: "none",
-		// 			md: "block",
-		// 		}}
-		// 	>
-		// 		{/* <SuggestedUsers /> */}
-		// 	</Box>
-		// </Flex>
-		<>
-		 <Flex gap='10' alignItems={"flex-start"}>
-		 	<Box flex={70}>
-		 		{!loading && posts.length === 0 && <h1>Follow some users to see the feed</h1>}
-
-		 		{loading && (
-					<Flex justify='center'>
-						<Spinner size='xl' />
-					</Flex>
-				)}
-
-				{!loading && posts.map((post) => (
-					<Post key={post.id} post={post} postedBy={post.postedBy} />
-				))}
-		 	</Box>
-		 	<Box
-		 		flex={30}
-		 		display={{
-		 			base: "none",
-		 			md: "block",
-				}}
-			>
-		 	</Box>
-		</Flex>
-		</>
-	);
+    return (
+        <Flex gap='10' alignItems={"flex-start"}>
+            <Box flex={70}>
+                {posts.length === 0 ? (
+                    <h1>No posts available</h1>
+                ) : (
+                    posts.map((post) => (
+                        <Post key={post._id} post={post} user={user} />
+                    ))
+                )}
+            </Box>
+            <Box
+                flex={30}
+                display={{
+                    base: "none",
+                    md: "block",
+                }}
+            >
+            </Box>
+        </Flex>
+    );
 };
 
 export default ForumPage;

@@ -3,7 +3,7 @@ import { Image } from "@chakra-ui/image";
 import { Box, Flex, Text } from "@chakra-ui/layout";
 import { BsThreeDots } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import Actions from "./Actions";
+// import Actions from "./Actions";
 import { useState } from "react";
 
 const UserPost = ({ postImg, postTitle, likes, replies }) => {
@@ -67,9 +67,9 @@ const UserPost = ({ postImg, postTitle, likes, replies }) => {
 						</Box>
 					)}
 
-					<Flex gap={3} my={1}>
+					{/* <Flex gap={3} my={1}>  //belum terpakai
 						<Actions liked={liked} setLiked={setLiked} />
-					</Flex>
+					</Flex> */}
 
 					<Flex gap={2} alignItems={"center"}>
 						<Text color={"gray.light"} fontSize='sm'>

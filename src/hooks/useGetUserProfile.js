@@ -1,41 +1,29 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import useShowToast from "./useShowToast";
+import { useState, useEffect } from "react";
 import { getUser } from "../libs/Methods";
 
 const useGetUserProfile = () => {
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const { username } = useParams();
-	const showToast = useShowToast();
 
 	useEffect(() => {
+		const fetchUserProfile = async () => {
+			try {
+				const userId = localStorage.getItem("user_id");
+				if (userId) {
+					const data = await getUser({ _id: userId });
+					setUser(data.data);
+				}
+			} catch (error) {
+				console.error("Error fetching user profile:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-			getUser({ id: 'user_id' }) 
-				.then(data => {
-					// console.log('User profile response:', data);
-					if (data.error) {
-						showToast("Error", data.error, "error");
-					} else {
-						setUser(data.user);
-					}
-					// if(data.isFrozen){
-					// 	setUser(null)
-					// 	return;
-					// }
-				})
-				.catch(error => {
-					showToast("Error", error.message, "error");
-					console.error('Error fetching user profile:', error);
-				})
-				.finally(() => {
-					setLoading(false); 
-				});
-	
+		fetchUserProfile();
+	}, []);
 
-	}, [username, showToast]);
-
-	return { loading, user };
+	return { user, loading };
 };
 
 export default useGetUserProfile;

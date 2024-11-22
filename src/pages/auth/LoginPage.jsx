@@ -39,7 +39,7 @@ export default function LoginPage() {
             .then(data => {
                 console.log('User login response:', data);
 
-                if (data.error) {
+                if (data.status == 204) {
                     showToast("Error", data.error, "error");
                 } else {
                     showToast("Success", "Logged in successfully!", "success");

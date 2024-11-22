@@ -31,7 +31,8 @@ const colors = {
 		dark: "#26355D",
 	},
 	orange: {
-		medium: "#FF8F00"
+		medium: "#FF8F00",
+		pale: "#E87B3DB2",
 	}
 };
 

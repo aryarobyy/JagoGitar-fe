@@ -1,96 +1,80 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Flex, Spinner } from "@chakra-ui/react";
+import { useRecoilState } from "recoil";
 import UserHeader from "../components/UserHeader";
 import Post from "../components/Post";
 import { getPost, getUser } from "../libs/Methods";
-import useGetUserProfile from "../hooks/useGetUserProfile";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
-import { Flex, Spinner } from "@chakra-ui/react";
-import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
+import CreatePost from "../components/CreatePost";
+import LoginPage from "./auth/LoginPage"
 
 const UserPage = () => {
-	const { user, loading } = useGetUserProfile();
-	const { username } = useParams();
-	const showToast = useShowToast();
-	const [posts, setPosts] = useRecoilState(postsAtom);
-	const [fetchingPosts, setFetchingPosts] = useState(true);
-	let [users, setUsers] = useState()
+    const { username } = useParams();
+    const showToast = useShowToast();
+    const [posts, setPosts] = useRecoilState(postsAtom);
+    const [fetchingPosts, setFetchingPosts] = useState(true);
+    const [user, setUser] = useState(null);
 
-	useEffect(() => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const userData = await getUser({ username });
+                console.log('User Data:', userData);
 
-		setFetchingPosts(true);
+                if (!userData.data || userData.data.length === 0) {
+                    showToast("Error", "User not found", "error");
+                    setUser(null);
+                    setFetchingPosts(false);
+                    return;
+                }
 
-		getUser({ "username": username })
-		.then(data => {
-			setUsers(data.data[0])
-		})
+                const user = userData.data[0];
+                setUser(user);
+                showToast("Success", "User found", "success");
 
-		   if (!users || !users.id) {
-				setFetchingPosts(false);
-				return;
-			  }
+                const postData = await getPost({ user_id: user._id });
+                console.log('Post Data:', postData.data);
 
-		getPost({ 'user_id':users._id })
-        .then((response) => {
-          console.log('User profile response:', response);
-          if (response.status === 204) {
-            setPosts([]);
-            showToast("Info", "User has no posts", "info");
-          } else if (response.data && response.data.posts) {
-            setPosts(response.data.posts);
-          } else if (response.data && response.data.error) {
-            showToast("Error", response.data.error, "error");
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          showToast("info", "Failed to fetch posts", "info");
-        })
-        .finally(() => setFetchingPosts(false));
+                if (postData.status === 204 || !postData.data) {
+                    setPosts([]);
+                    showToast("Info", "User has no posts", "info");
+                } else {
+                    setPosts(postData.data);
+                }
 
+                setFetchingPosts(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                showToast("Error", "Failed to fetch data", "error");
+                setFetchingPosts(false);
+            }
+        };
 
-			// if (!user) return;
-			// setFetchingPosts(true);
-			// try {
-			// 	getPost( { _id: 'user.id'} )
-			// 	// console.log(data);
-			// 	setPosts(data);
-			// 	}
-			//  catch (error) {
-			// 	showToast("Error", error.message, "error");
-			// 	showToast("Info", "User has no posts", "info");
-			// 	setPosts([]);
-			// } finally {
-			// 	setFetchingPosts(false);
-			// }
-	}, []);
+        fetchData();
+    }, [username, showToast, setPosts]);
 
-	if (!users && loading) {
-		return (
-			<Flex justifyContent={"center"}>
-				<Spinner size={"xl"} />
-			</Flex>
-		);
-	}
-	if (!users && !loading) return <h1>User not found</h1>;
+    if (!user && !fetchingPosts) return <h1>User not found</h1>;
 
-	return (
-		<>
-			<UserHeader user={users} />
-
-			{!fetchingPosts && posts.length === 0 && <h1>User has not posts.</h1>}
-			{fetchingPosts && (
-				<Flex justifyContent={"center"} my={12}>
-					<Spinner size={"xl"} />
-				</Flex>
-			)}
-			
-			{posts.map((post) => (
-				<Post key={post._id} post={post} postedBy={post.postedBy} />
-			))}
-		</>
-	);
+    return (
+        <>
+            {!user && <LoginPage />}
+            {user && <UserHeader user={user} />}
+            {fetchingPosts ? (
+                <Flex justifyContent={"center"} my={12}>
+                    <Spinner size={"xl"} />
+                </Flex>
+            ) : posts.length === 0 ? (
+                <h1>User has no posts.</h1>
+            ) : (
+                posts.map((post) => (
+                    <Post key={post._id} post={post} user={user} />
+                ))
+            )}
+            <CreatePost />
+        </>
+    );
 };
 
 export default UserPage;

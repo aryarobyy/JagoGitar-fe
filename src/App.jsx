@@ -8,7 +8,6 @@ import ForumPage from "./pages/ForumPage";
 import { useRecoilValue } from "recoil";
 import userAtom from "./atoms/userAtom";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
-import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import CourseListPage from './pages/course/CourseListPage'
 import CoursePage from "./pages/course/CoursePage";
@@ -26,9 +25,13 @@ import { useState } from "react";
 function App() {
 	const user = useRecoilValue(userAtom);
 	const [exist,setExist] = useState(false)
-	getUser({_id: localStorage.getItem("user_id")}).then((data) => {
-		if(data.status == 200) setExist(true)
-	})
+
+	if(localStorage.getItem("user_id")){
+		getUser({_id: localStorage.getItem("user_id")}).then((data) => {
+			if(data.status == 200) setExist(true)
+		})
+    }
+
 	const { pathname } = useLocation();
 	return (
 		
@@ -46,7 +49,7 @@ function App() {
 					<Route path="/about" element={<AboutPage />} />
 					<Route path="/contact" element={<ContactPage />} />
 					<Route path="/" element={<WelcomePage />} />
-					<Route path='/user/:username' element={user ? (<> <UserPage /> <CreatePost /> </>) : (<UserPage />)} />
+					<Route path='/user/:username' element={<UserPage />} />
 					<Route path='/:username/post/:pid' element={<PostPage />} />
 					<Route path='/chat' element={user ? <ChatPage /> : <Navigate to="/login" />} />
 					<Route path='/course/list' element={<CourseListPage />} />
