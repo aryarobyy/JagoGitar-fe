@@ -19,7 +19,7 @@ import { useSetRecoilState } from "recoil";
 import useShowToast from "../../hooks/useShowToast";
 import userAtom from "../../atoms/userAtom";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { getUser } from "../../libs/Methods";
+import{ loginUser } from '../../connector/UserConnector' 
 
 export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -33,30 +33,25 @@ export default function LoginPage() {
 	});
 	const showToast = useShowToast();
 	const handleLogin = async () => {
-		setLoading(true);
-
-        getUser(inputs)
-            .then(data => {
-                console.log('User login response:', data);
-
-                if (data.status == 204) {
-                    showToast("Error", data.error, "error");
-                } else {
-                    showToast("Success", "Logged in successfully!", "success");
-                    localStorage.setItem("user_id", data.data[0]._id);
-					console.log(data.data[0]._id)
-                    setUser(data);
-                    navigate("/"); // Navigate to the dashboard or welcome page
-                }
-            })
-            .catch(error => {
-                console.error('Error logging in:', error);
-                showToast("Error", "Login failed. Please try again later.", "error");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-		
+        if (!inputs.username || !inputs.password) {
+            showToast("Error", "Please fill in all fields", "error");
+            return;
+        }
+        setLoading(true);
+        try {
+            const user = await loginUser(inputs);
+            setUser(user);
+			console.log("User:", user)
+            localStorage.setItem("user_id", user.userId);
+			localStorage.setItem("user_data", JSON.stringify(user));
+            navigate('/');
+            showToast("Success", "Logged in successfully", "success");
+        } catch (e) {
+            console.error("Login error", e);
+            showToast("Error", "Failed to log in. Please try again.", "error");
+        } finally {
+            setLoading(false);
+        }
 	};
 
 	return (

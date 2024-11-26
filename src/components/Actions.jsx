@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
-import { createComment, getLike, getPost, getUser } from "../libs/Methods";
+import { createComment, getLike, getPost } from "../libs/Methods";
 import { useParams } from "react-router-dom";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 

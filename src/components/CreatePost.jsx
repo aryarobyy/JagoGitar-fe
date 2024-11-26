@@ -27,21 +27,32 @@ import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
 import { useParams } from "react-router-dom";
 import { createPost } from "../libs/Methods";
-import { getUser } from "../libs/Methods";
+import { getUserById } from "../connector/UserConnector";
+import useGetUserProfile from "../hooks/useGetUserProfile";
+// import { getUser } from "../libs/Methods";
 
 const MAX_CHAR = 500;
 
 const CreatePost = () => {
 	const [users, setUsers] = useState(null);
+	const {user: profile} = useGetUserProfile()
 
 	useEffect(() => {
 		const fetchUser = async () => {
-			if (localStorage.getItem("user_id")) {
-				try {
-					const data = await getUser({ "_id": localStorage.getItem("user_id") });
-					setUsers(data.data[0]);
-				} catch (error) {
-					console.error("Error fetching user:", error);
+			// if (localStorage.getItem("user_id")) {
+			// 	try {
+			// 		const data = await getUser({ "_id": localStorage.getItem("user_id") });
+			// 		setUsers(data.data[0]);
+			// 	} catch (error) {
+			// 		console.error("Error fetching user:", error);
+			// 	}
+			// }
+			if (localStorage.getItem("user_id")){
+				try{
+					const data = await getUserById({ userId: localStorage.getItem("user_id") });
+					setUsers(data.data)
+				} catch(error) {
+					console.error("Failed Getting user: ", error)
 				}
 			}
 		};

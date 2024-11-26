@@ -11,26 +11,12 @@ import { getUser } from "../libs/Methods";
 import { useEffect, useState } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useBreakpointValue } from "@chakra-ui/react";
-import useLogout from "../hooks/useLogout";
+import useGetUserProfile from "../hooks/useGetUserProfile";
 
 const Navbar = () => {
-    let [users, setUsers] = useState()
+    const user  = useRecoilValue(userAtom);
     const isMobile = useBreakpointValue({ base: true, md: false });
-    const logout = useLogout();
-    const [userData, setUserData] = useState(null);
 
-    // useEffect(() => {
-    //     if (users && users.length > 0) {
-    //         setUserData(users[0]);
-    //     }
-    //     if(localStorage.getItem("user_id")){
-    //         getUser({ _id: localStorage.getItem("user_id") })
-    //         .then(data => {
-    //             setUsers(data.data[0])
-    //         })
-    //     }
-    // }, [users]);
-    
     const handleLogout = () => {    
         try {
             localStorage.removeItem("user_id");
@@ -39,14 +25,6 @@ const Navbar = () => {
             showToast("Error", error, "error");
         }
     };
-    
-    if(localStorage.getItem("user_id")){
-        getUser({ _id: localStorage.getItem("user_id") })
-        .then(data => {
-            setUsers(data.data[0])
-        })
-    }
-    
 
 
     return (
@@ -83,7 +61,7 @@ const Navbar = () => {
                                 About Us
                             </Button>
                         </Link>
-                        {users && (
+                        {user && (
                             <Link as={RouterLink} to="/contact" mx={4}  >
                                 <Button _hover={"transparent"}>
                                     Contact
@@ -112,7 +90,7 @@ const Navbar = () => {
                             About Us
                         </Button>
                     </Link>
-                    {users && (
+                    {user && (
                         <Link as={RouterLink} to="/contact" mx={4}>
                             <Button _hover={"transparent"}>
                                 Contact
@@ -128,7 +106,7 @@ const Navbar = () => {
             )}
         </Flex>
                 </Flex>
-                {users && (
+                {user && (
                     <Flex alignItems={"center"} gap={4}>
                         {/* <Link as={RouterLink} to={`/chat`}>
                             <BsFillChatQuoteFill size={20} />
@@ -136,13 +114,13 @@ const Navbar = () => {
                         <Button size={"xs"} onClick={() => handleLogout()}>
                             <FiLogOut size={20} />
 							</Button>
-							<Link as={RouterLink} to={`/user/${users.username}`} mx={4}>
+							<Link as={RouterLink} to={`/user/${user.username}`} mx={4}>
                                 <RxAvatar size={24} />
                             </Link>
                     </Flex>
                 )}
 
-                {!users && (
+                {!user && (
                     <Flex>
                         <Button bg={"orange.medium"} color={"white"}>
                             <Link as={RouterLink} to="/signup">

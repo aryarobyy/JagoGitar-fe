@@ -3,23 +3,14 @@ import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Post from "../assets/image/icon.png";
 import { useRecoilValue } from 'recoil';
-import Main from "../assets/image/main.png"
-import Logo from "../assets/image/Logo.png";
-import Dekstop2 from "../assets/image/dekstop2.png"
-import Dekstop1 from "../assets/image/dekstop1.png"
 import AdeS from "../assets/image/adeS.png"
 import HarryV from "../assets/image/harryV.png"
 import AryaN from "../assets/image/aryaN.png"
-import { getUser } from '../libs/Methods';
-const WelcomePage = () => {
-    let [user,setUser] = useState()
+import userAtom from '../atoms/userAtom';
+import useGetUserProfile from '../hooks/useGetUserProfile'
 
-    if(localStorage.getItem("user_id")){
-      getUser({ "_id": localStorage.getItem("user_id") })
-      .then(data => {
-        setUser(data.data[0])
-      })
-    }
+const WelcomePage = () => {
+  const user  = useRecoilValue(userAtom);
 
     return (
       <>
