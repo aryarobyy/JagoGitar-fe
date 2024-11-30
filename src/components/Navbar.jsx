@@ -4,28 +4,13 @@ import userAtom from "../atoms/userAtom";
 import { RxAvatar } from "react-icons/rx";
 import { Link as RouterLink } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
-import { BsFillChatQuoteFill } from "react-icons/bs";
 import Logo from "../assets/image/Logo.png";
-import { VscAccount } from "react-icons/vsc";
-import { getUser } from "../libs/Methods";
-import { useEffect, useState } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useBreakpointValue } from "@chakra-ui/react";
-import useGetUserProfile from "../hooks/useGetUserProfile";
 
-const Navbar = () => {
+const Navbar = ({ handleLogout }) => {
     const user  = useRecoilValue(userAtom);
     const isMobile = useBreakpointValue({ base: true, md: false });
-
-    const handleLogout = () => {    
-        try {
-            localStorage.removeItem("user_id");
-            location.reload();
-        } catch (error) {
-            showToast("Error", error, "error");
-        }
-    };
-
 
     return (
         <Container maxW="1440px" w="full" >

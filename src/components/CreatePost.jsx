@@ -26,63 +26,33 @@ import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 import postsAtom from "../atoms/postsAtom";
 import { useParams } from "react-router-dom";
-import { createPost } from "../libs/Methods";
-import { getUserById } from "../connector/UserConnector";
-import useGetUserProfile from "../hooks/useGetUserProfile";
-// import { getUser } from "../libs/Methods";
+import { postForum } from "../connector/ForumConnector";
 
 const MAX_CHAR = 500;
 
 const CreatePost = () => {
-	const [users, setUsers] = useState(null);
-	const {user: profile} = useGetUserProfile()
-
-	useEffect(() => {
-		const fetchUser = async () => {
-			// if (localStorage.getItem("user_id")) {
-			// 	try {
-			// 		const data = await getUser({ "_id": localStorage.getItem("user_id") });
-			// 		setUsers(data.data[0]);
-			// 	} catch (error) {
-			// 		console.error("Error fetching user:", error);
-			// 	}
-			// }
-			if (localStorage.getItem("user_id")){
-				try{
-					const data = await getUserById({ userId: localStorage.getItem("user_id") });
-					setUsers(data.data)
-				} catch(error) {
-					console.error("Failed Getting user: ", error)
-				}
-			}
-		};
-
-		fetchUser();
-	}, []);
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
 	const imageRef = useRef(null);
 	const user = useRecoilValue(userAtom);
 	const showToast = useShowToast();
-	const [loading, setLoading] = useState(false);
 	const [posts, setPosts] = useRecoilState(postsAtom);
 	const { username } = useParams();
 	const [inputs, setInputs] = useState({
-		user_id: "",
+		userId: user.userId,
 		postedBy: "",
 		text: "",
-		img: "null",
+		img: "",
 	});
-
 	const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
 
 	useEffect(() => {
-		if (user && user.data && user.data[0]) {
+		if (user) {
 			setInputs((inputs) => ({
 				...inputs,
-				user_id: user.data[0]._id,
-				postedBy: user.data[0].username,
+				userId: user.userId,
+				postedBy: user.username,
 			}));
 		}
 	}, [user]);
@@ -99,37 +69,29 @@ const CreatePost = () => {
 		}
 	};
 
-	const handleCreatePost = () => {
-		setLoading(true);
+	const handleCreatePost = async () => {
 		const postData = { ...inputs, img: imgUrl };
-		console.log("Data yang dikirim", postData);
+		console.log("Data send: ", postData);
 
-		createPost(postData)
-			.then((data) => {
-				if (data && data.error) {
-					showToast("Error", data.error, "error");
-					return;
-				}
-				showToast("Success", "Post created successfully", "success");
-				if (username === user.data[0].username) {
-					setPosts([data, ...posts]);
-				}
-				onClose();
-				setInputs({ user_id: user.data[0]._id, postedBy: user.data[0].username, text: "", img: "" });
+		try{
+			const res = postForum(postData)
+			if (res.error) {
+				showToast("Error", res.error, "error");
+				return;
+			}
+			if(username === user.username){
+				setInputs({ userId: user.userId, postedBy: user.username, text: "", img: "" });
 				setImgUrl("");
-			})
-			.catch((error) => {
-				showToast("Error", "Kesalahan membuat posting", "error");
-				console.error("Error creating post:", error);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
+			}
+			onClose()
+		} catch (e){
+			console.log(e)
+			return
+		}
 	};
 
 	return (
 		<>
-			{users && 
 			<>
 				<Button
 					position={"fixed"}
@@ -137,6 +99,7 @@ const CreatePost = () => {
 					right={6}
 					bg={useColorModeValue("gray.300", "gray.dark")}
 					onClick={onOpen}
+					color={"black"}
 					w={{ base: 7, sm: 8, md: 9, lg: 12 }}
 					h={{ base: 7, sm: 8, md: 9, lg: 12 }}
 				>
@@ -187,14 +150,13 @@ const CreatePost = () => {
 						</ModalBody>
 
 						<ModalFooter>
-							<Button colorScheme='blue' mr={3} onClick={handleCreatePost} isLoading={loading}>
+							<Button colorScheme='blue' mr={3} onClick={handleCreatePost} >
 								Post
 							</Button>
 						</ModalFooter>
 					</ModalContent>
 				</Modal>
 			</>
-			}
 		</>
 	);
 };

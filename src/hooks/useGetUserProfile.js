@@ -11,7 +11,7 @@ const useGetUserProfile = () => {
 				const userId = localStorage.getItem("user_id");
 				if (userId) {
 					const user = await getUserById(userId);
-					setUser(user.data);
+					setUser(user);
 				}
 			} catch (error) {
 				console.error("Error fetching user profile:", error);

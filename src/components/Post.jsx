@@ -10,42 +10,29 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 
-const Post = ({ post, user }) => {
+const Post = ({ post }) => {
     const currentUser = useRecoilValue(userAtom);
     const navigate = useNavigate();
     const showToast = useShowToast();
 
-    if (!post || !post.createdAt) {
-        return null; // Or a loading state, e.g., <Text>Loading...</Text>
+    if (!post ) {
+        return null;
     }
-
-    const handleDeletePost = (postId) => {
-        if (!window.confirm("Are you sure you want to delete this post?")) return;
-
-        deletePost({ id: postId })
-            .then(() => {
-                showToast("Success", "Post deleted", "success");
-                setPosts(posts.filter((p) => p._id !== postId));
-            })
-            .catch(error => {
-                showToast("Error", error.message, "error");
-            });
-    };
 
     const postDate = parseISO(post.createdAt);
     const timeAgo = isValid(postDate) ? formatDistanceToNow(postDate) : 'Invalid date';
 
     return (
-        <Link to={`/${user?.username}/post/${post._id}`}>
+        <Link to={`/${post?.postedBy}/forum/${post.forumId}`}>
             <Flex gap={3} mb={4} py={5}>
                 <Flex flexDirection={"column"} alignItems={"center"}>
                     <Avatar
                         size='md'
-                        name={user?.name}
-                        src={user?.profilePic}
+                        name={post?.postedBy}
+                        src={post?.userPP}
                         onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/${user?.username}`);
+                            navigate(`/${post?.postedBy}`);
                         }}
                     />
                     <Box w='1px' h={"full"} bg='gray.light' my={2}></Box>
@@ -55,7 +42,7 @@ const Post = ({ post, user }) => {
                             <Avatar
                                 size='xs'
                                 name='John Doe'
-                                src={post.replies[0].userProfilePic}
+                                src={post.replies[0].userPP}
                                 position={"absolute"}
                                 top={"0px"}
                                 left='15px'
@@ -66,7 +53,7 @@ const Post = ({ post, user }) => {
                             <Avatar
                                 size='xs'
                                 name='John Doe'
-                                src={post.replies[1].userProfilePic}
+                                src={post.replies[1].userPP}
                                 position={"absolute"}
                                 bottom={"0px"}
                                 right='-5px'
@@ -77,7 +64,7 @@ const Post = ({ post, user }) => {
                             <Avatar
                                 size='xs'
                                 name='John Doe'
-                                src={post.replies[2].userProfilePic}
+                                src={post.replies[2].userPP}
                                 position={"absolute"}
                                 bottom={"0px"}
                                 left='4px'
@@ -94,10 +81,10 @@ const Post = ({ post, user }) => {
                                 fontWeight={"bold"}
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    navigate(`/${user.username}`);
+                                    navigate(`/user/${post.postedBy}`);
                                 }}
                             >
-                                {user?.username}
+                                {post?.postedBy}
                             </Text>
                             <Image src='/verified.png' w={4} h={4} ml={1} />
                         </Flex>
@@ -105,17 +92,31 @@ const Post = ({ post, user }) => {
                             <Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"}>
                                 {timeAgo} ago
                             </Text>
-
+{/* 
                             {currentUser?._id === user?._id && (
                                 <DeleteIcon size={20} onClick={() => handleDeletePost(post._id)} />
-                            )}
+                            )} */}
                         </Flex>
                     </Flex>
 
                     <Text fontSize={"sm"}>{post.text}</Text>
-                    {post.img && (
-                        <Box borderRadius={6} overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
-                            <Image src={post.img} w={"full"} />
+                                        {post.imgUrl && (
+                        <Box
+                            borderRadius={6}
+                            overflow={"hidden"}
+                            border={"1px solid"}
+                            borderColor={"gray.light"}
+                            // maxW="400px"
+                            // maxH="300px" 
+                            // mx="auto"
+                        >
+                            <Image
+                                src={post.imgUrl}
+                                w="full"
+                                h="auto"
+                                objectFit="cover" 
+                                // maxH="300px" 
+                            />
                         </Box>
                     )}
 

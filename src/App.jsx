@@ -20,25 +20,34 @@ import { getUser } from "./libs/Methods";
 // import CustomPage from "./tuner/CustomPage";
 import LightDark from "./components/LightDark";
 import { useState } from "react";
-
+import { useRecoilState } from "recoil";
 
 function App() {
-	const user = useRecoilValue(userAtom);
+	const [user, setUser] = useRecoilState(userAtom);
 	const [exist,setExist] = useState(false)
 
-	if(localStorage.getItem("user_id")){
-		getUser({_id: localStorage.getItem("user_id")}).then((data) => {
-			if(data.status == 200) setExist(true)
-		})
-    }
+	// if(localStorage.getItem("user_id")){
+	// 	getUser({_id: localStorage.getItem("user_id")}).then((data) => {
+	// 		if(data.status == 200) setExist(true)
+	// 	})
+    // }
 
-	const { pathname } = useLocation();
+	const handleLogout = () => {
+		try {
+		  setUser(null);
+		  localStorage.removeItem("user_data"); 
+		  localStorage.removeItem("user_id"); 
+		} catch (error) {
+		  console.error("Error during logout:", error);
+		}
+	  };
+
 	return (
 		
 		<Box position={"relative"} w='full'>
 			{/* <Container maxW={pathname === "/" ? { base: "1440px", md: "1000px" } : "1440"} w={"full"}> */}
 			<Container maxW={"1440px"}>
-				<Navbar />
+				<Navbar handleLogout={handleLogout} /> 
 				<Routes>
 					{/* <Route path='/' element={user ? <ForumPage /> : <Navigate to='/login' />} />
 					<Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} /> */}
@@ -50,7 +59,7 @@ function App() {
 					<Route path="/contact" element={<ContactPage />} />
 					<Route path="/" element={<WelcomePage />} />
 					<Route path='/user/:username' element={<UserPage />} />
-					<Route path='/:username/post/:pid' element={<PostPage />} />
+					<Route path='/:username/forum/:forumId' element={<PostPage />} />
 					<Route path='/chat' element={user ? <ChatPage /> : <Navigate to="/login" />} />
 					<Route path='/course/list' element={<CourseListPage />} />
 					<Route path='/course/:id' element={<CoursePage />} />

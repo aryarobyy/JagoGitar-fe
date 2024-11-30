@@ -14,21 +14,21 @@ import CustomButton from "../utils/CustomButton";
 import Post from "./Post";
 import { useState, useEffect } from "react";
 import { getFollow } from "../libs/Methods";
+import useGetUserProfile from "../hooks/useGetUserProfile";
 
-const UserHeader = ({ user }) => {
+const UserHeader = ({user}) => {
     const toast = useToast();
-    const currentUser = user;
+    const currentUser = user ;
     const my_id = localStorage.getItem("user_id")
     const [following,setFollowing] = useState(false)
     const [activeTab, setActiveTab] = useState("posts","likes");
-
     // getFollow({ user_id: my_id,following: user._id }).then((data) => {
     //     if(data.status == 200) setFollowing(true)
     // })
 
     useEffect(() => {
-        if (user && user._id) {
-            getFollow({ user_id: my_id, following: user._id }).then((data) => {
+        if (user && user.userId) {
+            getFollow({ user_id: my_id, following: user.userId }).then((data) => {
                 if (data.status === 200) setFollowing(true);
             });
         }
@@ -60,17 +60,17 @@ const UserHeader = ({ user }) => {
             <Flex justifyContent={"space-between"} w={"full"}>
                 <Box>
                     <Text fontSize={"2xl"} fontWeight={"bold"}>
-                        {user.name}
+                        {currentUser.name}
                     </Text>
                     <Flex gap={2} alignItems={"center"}>
-                        <Text fontSize={"sm"}>{user.username}</Text>
+                        <Text fontSize={"sm"}>{currentUser.username}</Text>
                         <Text fontSize={"xs"} bg={"orange.medium"} color={"gray.light"} p={1} borderRadius={"full"}>
                             JagoGitar.net
                         </Text>
                     </Flex>
                 </Box>
                 <Box>
-                    {user.profilePic && (
+                    {user.userPP && (
                         <Avatar
                             name={user.name}
                             src={user.profilePic}
@@ -80,7 +80,7 @@ const UserHeader = ({ user }) => {
                             }}
                         />
                     )}
-                    {!user.profilePic && (
+                    {!user.userPP && (
                         <Avatar
                             name={user.name}
                             src='https://bit.ly/broken-link'
@@ -95,12 +95,12 @@ const UserHeader = ({ user }) => {
 
             <Text>{user.bio}</Text>
 
-            {currentUser._id === my_id && (
+            {currentUser.userId === my_id && (
                 <Link as={RouterLink} to='/update'>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}
-            {currentUser._id !== my_id && (
+            {currentUser.userId !== my_id && (
                 <Button size={"sm"} onClick={() => handleFollow()}>
                     {following ? "Unfollow" : "Follow"}
                 </Button>
