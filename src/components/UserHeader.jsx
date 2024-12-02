@@ -13,8 +13,6 @@ import CustomButton from "../utils/CustomButton";
 // import UserLiked from "./UserLiked";
 import Post from "./Post";
 import { useState, useEffect } from "react";
-import { getFollow } from "../libs/Methods";
-import useGetUserProfile from "../hooks/useGetUserProfile";
 
 const UserHeader = ({user}) => {
     const toast = useToast();
@@ -27,11 +25,11 @@ const UserHeader = ({user}) => {
     // })
 
     useEffect(() => {
-        if (user && user.userId) {
-            getFollow({ user_id: my_id, following: user.userId }).then((data) => {
-                if (data.status === 200) setFollowing(true);
-            });
-        }
+        // if (user && user.userId) {
+        //     getFollow({ user_id: my_id, following: user.userId }).then((data) => {
+        //         if (data.status === 200) setFollowing(true);
+        //     });
+        // }
     }, [user]);
 
     const handleFollow = () => {
