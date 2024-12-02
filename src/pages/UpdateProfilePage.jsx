@@ -15,8 +15,9 @@ import { useRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
-import { updateUser } from "../libs/Methods";
 import useGetUserProfile from "../hooks/useGetUserProfile";
+import { changeUser } from "../connector/UserConnector";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateProfilePage() {
     const { user, loading } = useGetUserProfile();
@@ -27,58 +28,50 @@ export default function UpdateProfilePage() {
         bio: "",
         password: "",
     });
-
+    const navigate = useNavigate();
     const fileRef = useRef(null);
     const [updating, setUpdating] = useState(false);
-    const [users, setUsers] = useRecoilState(userAtom);
-
     const showToast = useShowToast();
     const { handleImageChange, imgUrl } = usePreviewImg();
 
-
 	useEffect(() => {
-        if (user && user[0]) {
-            const iniUser = user[0];
+        if (user) {
             setInputs({
-                name: iniUser.name || "",
-                username: iniUser.username || "",
-                email: iniUser.email || "",
-                bio: iniUser.bio || "",
+                name: user.name || "",
+                username: user.username || "",
+                email: user.email || "",
+                bio: user.bio || "",
                 password: "",
             });
         }
     }, [user]);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (updating) return;
         setUpdating(true);
 
-        updateUser(user[0]._id, inputs)
-            .then((data) => {
-                if (data.error) {
-                    showToast("Error", data.error, "error");
-                    setUpdating(false);
-                    return;
-                }
-                showToast("Success", "Profile updated successfully", "success");
-                setUsers(data.config.data);
-                localStorage.setItem("user_id", data.data[0]._id);
-            })
-            .catch((error) => {
-                showToast("Error", error.toString(), "error");
-            })
-            .finally(() => {
-                setUpdating(false);
-            });
+        try {
+            const res = await changeUser(user.userId, inputs);
+			console.log("Response: ", res)
+            showToast("Success", "Profile updated successfully", "success");
+            localStorage.setItem("user_id", res.userId);
+            localStorage.setItem("user_data", JSON.stringify(res));
+			navigate(`/user/${res.username}`);
+        } catch (e) {
+            console.error("Error updating profile:", e);
+            showToast("Error updating profile", "error");
+        } finally {
+            setUpdating(false);
+        }
     };
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
-    if (!user || !user[0]) {
+    if (!user) {
         return <div>No user data available</div>;
     }
 

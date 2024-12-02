@@ -82,6 +82,7 @@ const CreatePost = () => {
 			if(username === user.username){
 				setInputs({ userId: user.userId, postedBy: user.username, text: "", img: "" });
 				setImgUrl("");
+				window.location.reload();
 			}
 			onClose()
 		} catch (e){

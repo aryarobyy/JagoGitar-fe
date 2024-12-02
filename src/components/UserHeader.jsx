@@ -96,7 +96,7 @@ const UserHeader = ({user}) => {
             <Text>{user.bio}</Text>
 
             {currentUser.userId === my_id && (
-                <Link as={RouterLink} to='/update'>
+                <Link as={RouterLink} to={`/update/${currentUser.userId}`}>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}

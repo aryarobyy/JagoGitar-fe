@@ -24,13 +24,6 @@ import { useRecoilState } from "recoil";
 
 function App() {
 	const [user, setUser] = useRecoilState(userAtom);
-	const [exist,setExist] = useState(false)
-
-	// if(localStorage.getItem("user_id")){
-	// 	getUser({_id: localStorage.getItem("user_id")}).then((data) => {
-	// 		if(data.status == 200) setExist(true)
-	// 	})
-    // }
 
 	const handleLogout = () => {
 		try {
@@ -51,9 +44,9 @@ function App() {
 				<Routes>
 					{/* <Route path='/' element={user ? <ForumPage /> : <Navigate to='/login' />} />
 					<Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} /> */}
-					<Route path='/update' element={user ? <UpdateProfilePage /> : <Navigate to='/login' />} />
-					<Route path='/signup' element={!exist ? <SignupPage/> :  <Navigate to='/' />} />
-					<Route path="/login" element={!exist ? <LoginPage/> :  <Navigate to='/' />} />
+					<Route path='/update/:userId' element={user ? <UpdateProfilePage /> : <Navigate to='/login' />} />
+					<Route path='/signup' element={!user ? <SignupPage/> :  <Navigate to='/' />} />
+					<Route path="/login" element={!user ? <LoginPage/> :  <Navigate to='/' />} />
 					<Route path="/forum" element={<ForumPage />} />
 					<Route path="/about" element={<AboutPage />} />
 					<Route path="/contact" element={<ContactPage />} />

@@ -18,7 +18,6 @@ const UserPage = () => {
             if(!user) return;
             try {
                 const postData = await getForumByUserId( user.userId );
-                console.log('Post Data:', postData);
                 if (postData === 204 || !postData) {
                     setPosts([]);
                     showToast("Info", "User has no posts", "info");

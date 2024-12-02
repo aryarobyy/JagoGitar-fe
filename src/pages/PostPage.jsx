@@ -21,8 +21,6 @@ const PostPage = () => {
     const showToast = useShowToast();
     const navigate = useNavigate();
     const loggedInUser = useRecoilValue(userAtom);
-    console.log("Postingan: ", post.imgUrl)
-    console.log("Author: ", postAuthor)
     useEffect(() => {
         const fetchPost = async () => {
             try{
@@ -51,6 +49,7 @@ const PostPage = () => {
         try{
             if (!window.confirm("Are you sure you want to delete this post?")) return;
             const res = await deleteForum(forumId);
+            console.log(res)
             if(res.error) {
                 showToast("Error", res.error, "error");
                 return;

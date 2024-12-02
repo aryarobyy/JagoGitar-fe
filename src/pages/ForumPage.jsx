@@ -21,7 +21,6 @@ const ForumPage = () => {
         const fetchPost = async () => {
             try {
                 const forumData = await getAllForum(); 
-                console.log("Forum Data:", forumData);
 
                 if (!forumData) {
                     setPosts([]);
@@ -48,7 +47,7 @@ const ForumPage = () => {
                 }, {})
                 setUserData(usersMap);
             }catch(e){
-                onsole.error("Error fetching user data:", e);
+                console.error("Error fetching user data:", e);
                     showToast("Error", "Failed to fetch user data", "error");
             }
         }

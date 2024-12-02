@@ -23,5 +23,6 @@ export const getForumByUserId = async (userId) => {
 
 export const deleteForum = async (forumId) => {
     const res = await instance.delete(`/forum/${forumId}`)
-    return res.data.data
+    console.log("Delete forum: ", res.data)
+    return res.data
 }

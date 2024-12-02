@@ -30,16 +30,13 @@ export const getUserById = async (userId) => {
     }
 };
 
-export const fetchUserById = async (userId) => {
-    try {
-      const res = await fetch(`/api/user/${userId}`); 
-      if (!res.ok) throw new Error("Failed to fetch user");
-      const data = await res.json();
-      console.log("Data by Id",data)
-      return data.user; 
-    } catch (error) {
-      console.error("Error fetching user:", error.message);
-      return null;
+export const changeUser = async (userId, updatedData) => {
+    try{
+        const response = await instance.put(`/user/${userId}`, updatedData)
+        console.log("Change user api:",response.data.updatedUser)
+        return response.data.updatedUser;
+    } catch (e){
+        console.error(e, "Error in changeUser API");
+        throw e
     }
-  };
-  
+}
