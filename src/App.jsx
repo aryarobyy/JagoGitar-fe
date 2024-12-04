@@ -4,11 +4,9 @@ import UserPage from "./pages/UserPage";
 import PostPage from "./pages/PostPage";
 import Navbar from "./components/Navbar";
 import ForumPage from "./pages/ForumPage";
-// import AuthPage from "./pages/AuthPage";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import userAtom from "./atoms/userAtom";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
-import ChatPage from "./pages/ChatPage";
 import CourseListPage from './pages/course/CourseListPage'
 import CoursePage from "./pages/course/CoursePage";
 import WelcomePage from "./pages/WelcomePage";
@@ -16,52 +14,61 @@ import AboutPage from "./pages/AboutPage"
 import ContactPage from "./pages/ContactPage"
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
-import { getUser } from "./libs/Methods";
-// import CustomPage from "./tuner/CustomPage";
 import LightDark from "./components/LightDark";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+import Sidebar from './admin/components/Sidebar';
+import DashBoard from './admin/Dashboard';
+import AdminNavbar from "./admin/components/AdminNavbar";
 
 function App() {
-	const [user, setUser] = useRecoilState(userAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  const location = useLocation();
 
-	const handleLogout = () => {
-		try {
-		  setUser(null);
-		  localStorage.removeItem("user_data"); 
-		  localStorage.removeItem("user_id"); 
-		} catch (error) {
-		  console.error("Error during logout:", error);
-		}
-	  };
+  const handleLogout = () => {
+    try {
+      setUser(null);
+      localStorage.removeItem("user_data");
+      localStorage.removeItem("user_id");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
-	return (
-		
-		<Box position={"relative"} w='full'>
-			{/* <Container maxW={pathname === "/" ? { base: "1440px", md: "1000px" } : "1440"} w={"full"}> */}
-			<Container maxW={"1440px"}>
-				<Navbar handleLogout={handleLogout} /> 
-				<Routes>
-					{/* <Route path='/' element={user ? <ForumPage /> : <Navigate to='/login' />} />
-					<Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} /> */}
-					<Route path='/update/:userId' element={user ? <UpdateProfilePage /> : <Navigate to='/login' />} />
-					<Route path='/signup' element={!user ? <SignupPage/> :  <Navigate to='/' />} />
-					<Route path="/login" element={!user ? <LoginPage/> :  <Navigate to='/' />} />
-					<Route path="/forum" element={<ForumPage />} />
-					<Route path="/about" element={<AboutPage />} />
-					<Route path="/contact" element={<ContactPage />} />
-					<Route path="/" element={<WelcomePage />} />
-					<Route path='/user/:username' element={<UserPage />} />
-					<Route path='/:username/forum/:forumId' element={<PostPage />} />
-					<Route path='/chat' element={user ? <ChatPage /> : <Navigate to="/login" />} />
-					<Route path='/course/list' element={<CourseListPage />} />
-					<Route path='/course/:id' element={<CoursePage />} />
-				</Routes>
-			<LightDark />
-				
-			</Container>
-		</Box>
-	);
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <Box position={"relative"} w="full">
+      {!isAdminRoute && (
+        <Container maxW="1440px">
+          <Navbar handleLogout={handleLogout} />
+          <Routes>
+            <Route path='/update/:userId' element={user ? <UpdateProfilePage /> : <Navigate to='/login' />} />
+            <Route path='/signup' element={!user ? <SignupPage /> : <Navigate to='/' />} />
+            <Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} />
+            <Route path='/forum' element={<ForumPage />} />
+            <Route path='/about' element={<AboutPage />} />
+            <Route path='/contact' element={<ContactPage />} />
+            <Route path='/' element={<WelcomePage />} />
+            <Route path='/user/:username' element={<UserPage />} />
+            <Route path='/:username/forum/:forumId' element={<PostPage />} />
+            <Route path='/course/list' element={<CourseListPage />} />
+            <Route path='/course/:id' element={<CoursePage />} />
+          </Routes>
+          <LightDark />
+        </Container>
+      )}
+      {isAdminRoute && (
+    <Box display="flex">
+      <Box flex="1" px={6} py={4}>
+        <AdminNavbar />
+        <Routes>
+        <Route path="/admin" element={<DashBoard />} />
+        </Routes>
+      </Box>
+	  </Box>
+	  
+      )}
+    </Box>
+  );
 }
 
 export default App;

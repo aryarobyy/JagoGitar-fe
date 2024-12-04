@@ -5,7 +5,7 @@ import { Link as RouterLink, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import sharedCourseAtom from "../../atoms/sharedCourseAtom";
 import userAtom from "../../atoms/userAtom";
-import { getUser } from "../../libs/Methods";
+import useGetUserProfile from "../../hooks/useGetUserProfile";
 const courses = [
   {
     id: 1,
@@ -68,13 +68,13 @@ const CoursePage = () => {
   const [user,setUser] = useState(null);
   const sharedCourse = useRecoilValue(sharedCourseAtom);
   const course = courses.find(course => course.id === parseInt(id)) || sharedCourse;
+  const {user: profile} = useGetUserProfile()
 
-  if(localStorage.getItem("user_id")){
-    getUser({ "_id": localStorage.getItem("user_id") })
-    .then(data => {
-      setUser(data.data[0])
-    })
-  }
+    const userId = localStorage.getItem("user_id");
+    if (userId) {
+      // Assuming `profile` is fetched based on `user_id` logic
+      setUser({ ...profile, userId: userId });
+    }
 
   if (!course) {
     return <Text>Course not found</Text>;

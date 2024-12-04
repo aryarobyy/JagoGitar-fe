@@ -5,13 +5,10 @@ import { Portal } from "@chakra-ui/portal";
 import { Button, useToast } from "@chakra-ui/react";
 import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
-import { useRecoilValue } from "recoil";
-import userAtom from "../atoms/userAtom";
 import { Link as RouterLink } from "react-router-dom";
-import follow from "../hooks/useFollowUnfollow";
+// import follow from "../hooks/useFollowUnfollow";
 import CustomButton from "../utils/CustomButton";
 // import UserLiked from "./UserLiked";
-import Post from "./Post";
 import { useState, useEffect } from "react";
 
 const UserHeader = ({user}) => {
@@ -32,9 +29,9 @@ const UserHeader = ({user}) => {
         // }
     }, [user]);
 
-    const handleFollow = () => {
-        follow(currentUser,my_id,setFollowing)
-    }
+    // const handleFollow = () => {
+    //     follow(currentUser,my_id,setFollowing)
+    // }
 
     const copyURL = () => {
         const currentURL = window.location.href;
@@ -98,11 +95,11 @@ const UserHeader = ({user}) => {
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}
-            {currentUser.userId !== my_id && (
+            {/* {currentUser.userId !== my_id && (
                 <Button size={"sm"} onClick={() => handleFollow()}>
                     {following ? "Unfollow" : "Follow"}
                 </Button>
-            )}
+            )} */}
             <Flex w={"full"} justifyContent={"space-between"}>
                 <Flex gap={2} alignItems={"center"}>
                     {/* <Text color={"gray.light"}>{user.followers.length} followers</Text> */}

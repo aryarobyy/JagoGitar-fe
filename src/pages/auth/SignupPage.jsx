@@ -21,7 +21,6 @@ import { useSetRecoilState } from "recoil";
 import useShowToast from "../../hooks/useShowToast";
 import userAtom from "../../atoms/userAtom";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import {createUser} from '../../libs/Methods'
 import { registerUser } from "../../connector/UserConnector";
 
 export default function SignupPage() {

@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Divider, Flex, Image, Spinner, Text } from "@chakra-ui/react";
-import Actions from "../components/Actions";
+// import Actions from "../components/Actions";
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
 import useGetUserProfile from "../hooks/useGetUserProfile";
@@ -9,7 +9,6 @@ import { formatDistanceToNow } from "date-fns";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { DeleteIcon } from "@chakra-ui/icons";
-import { getPost, deletePost, getUser } from "../libs/Methods";
 import { deleteForum, getForum } from "../connector/ForumConnector";
 import { getUserById } from "../connector/UserConnector";
 
