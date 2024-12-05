@@ -2,7 +2,6 @@ import instance from "../libs/instance";
 
 export const postForum = async (data) => {
     const res = await instance.post("/forum/post", data)
-    console.log("Post Forum: ",res.data.data)
     return res.data.data
 }
 
@@ -23,6 +22,5 @@ export const getForumByUserId = async (userId) => {
 
 export const deleteForum = async (forumId) => {
     const res = await instance.delete(`/forum/${forumId}`)
-    console.log("Delete forum: ", res.data)
     return res.data
 }

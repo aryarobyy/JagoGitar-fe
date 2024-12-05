@@ -40,10 +40,10 @@ export default function LoginPage() {
         setLoading(true);
         try {
             const user = await loginUser(inputs);
-            setUser(user);
 			console.log("User:", user)
-            localStorage.setItem("user_id", user.userId);
+            setUser(user);
 			localStorage.setItem("user_data", JSON.stringify(user));
+            localStorage.setItem("user_id", user.userId);
             navigate('/');
             showToast("Success", "Logged in successfully", "success");
         } catch (e) {

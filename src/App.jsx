@@ -18,6 +18,7 @@ import LightDark from "./components/LightDark";
 import Sidebar from './admin/components/Sidebar';
 import DashBoard from './admin/Dashboard';
 import AdminNavbar from "./admin/components/AdminNavbar";
+import AddCourse from "./pages/course/AddCourse";
 
 function App() {
   const [user, setUser] = useRecoilState(userAtom);
@@ -51,7 +52,8 @@ function App() {
             <Route path='/user/:username' element={<UserPage />} />
             <Route path='/:username/forum/:forumId' element={<PostPage />} />
             <Route path='/course/list' element={<CourseListPage />} />
-            <Route path='/course/:id' element={<CoursePage />} />
+            <Route path='/course/:courseId' element={<CoursePage />} />
+            <Route path='/add/course' element={<AddCourse /> } />
           </Routes>
           <LightDark />
         </Container>
