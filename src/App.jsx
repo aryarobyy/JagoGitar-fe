@@ -18,6 +18,7 @@ import LightDark from "./components/LightDark";
 import DashBoard from './admin/Dashboard';
 import AdminNavbar from "./admin/components/AdminNavbar";
 import AddCourse from "./pages/course/AddCourse";
+import RegisMentor from "./pages/RegisMentor";
 
 function App() {
   const [user, setUser] = useRecoilState(userAtom);
@@ -34,7 +35,7 @@ function App() {
   };
 
   const isAdminRoute = location.pathname.startsWith('/admin');
-
+  
   return (
     <Box position={"relative"} w="full">
       {!isAdminRoute && (
@@ -51,6 +52,7 @@ function App() {
             <Route path='/user/:username' element={<UserPage />} />
             <Route path='/:username/forum/:forumId' element={<PostPage />} />
             <Route path='/course/list' element={<CourseListPage />} />
+            <Route path='/course/mentor' element={<RegisMentor />} />
             <Route path='/course/:courseId' element={<CoursePage />} />
             <Route path='/add/course' element={<AddCourse /> } />
           </Routes>

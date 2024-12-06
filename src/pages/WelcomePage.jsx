@@ -7,7 +7,6 @@ import AdeS from "../assets/image/adeS.png"
 import HarryV from "../assets/image/harryV.png"
 import AryaN from "../assets/image/aryaN.png"
 import userAtom from '../atoms/userAtom';
-import useGetUserProfile from '../hooks/useGetUserProfile'
 
 const WelcomePage = () => {
   const user  = useRecoilValue(userAtom);
@@ -16,11 +15,6 @@ const WelcomePage = () => {
       <>
         {/* // <Container maxW="1440px" w="full"> */}
         <Box  justifyItems={"center"} alignItems={"center"} justifyContent={"center"}>
-          {/* <Flex justify="center" align="center">
-            <Link as={RouterLink} to="/">
-              <Image src={Logo} alt="JagoGitar Logo" />
-            </Link>
-          </Flex> */}
             <Flex
                 direction={{ base: 'column', md: 'row' }}
                 align="center"

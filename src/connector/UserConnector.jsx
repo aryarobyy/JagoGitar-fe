@@ -51,3 +51,8 @@ export const delUser = async (userId) => {
     const res = await instance.delete(`/user/${userId}`)
     return res.data
 }
+
+export const regisMentor = async (data) => {
+    const response = await instance.post(`/user/mentor`, data);
+    return response.data;
+}

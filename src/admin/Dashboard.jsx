@@ -8,7 +8,7 @@ export default function Dashboard() {
       <Box px={{ base: 3, md: 8 }} h="auto">
         <Container maxW="container.xl">
           <Grid templateColumns={{ base: "1fr", xl: "3fr 2fr" }} gap={4} mb={20}>
-            <UserTable headers={"Daftar User Pending"} statusFilter="userPending" roleFilter="user" />
+            <UserTable headers={"Daftar User Pending"} statusFilter="userPending" roleFilter="pending" />
             <UserTable headers={"Daftar User Active"}  statusFilter="userActive" roleFilter="user" />
           </Grid> 
           <Grid templateColumns={{ base: "1fr", xl: "3fr 2fr" }} gap={4} >

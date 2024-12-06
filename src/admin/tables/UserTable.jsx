@@ -35,7 +35,7 @@ export default function UserTable({ statusFilter, roleFilter, headers }) {
   
       setUsers((prev) =>
         prev.map((user) =>
-          user.userId === userId ? { ...user, status: "userActive" } : user
+          user.userId === userId ? { ...user, role: "user",status: "userActive" } : user
         )
       );
       window.location.reload()

@@ -10,6 +10,7 @@ import { Link as RouterLink } from "react-router-dom";
 import CustomButton from "../utils/CustomButton";
 // import UserLiked from "./UserLiked";
 import { useState, useEffect } from "react";
+import { FaInstagram } from "react-icons/fa"; 
 
 const UserHeader = ({user}) => {
     const toast = useToast();
@@ -21,13 +22,13 @@ const UserHeader = ({user}) => {
     //     if(data.status == 200) setFollowing(true)
     // })
 
-    useEffect(() => {
+    // useEffect(() => {
         // if (user && user.userId) {
         //     getFollow({ user_id: my_id, following: user.userId }).then((data) => {
         //         if (data.status === 200) setFollowing(true);
         //     });
         // }
-    }, [user]);
+    // }, [user]);
 
     // const handleFollow = () => {
     //     follow(currentUser,my_id,setFollowing)
@@ -104,7 +105,7 @@ const UserHeader = ({user}) => {
                 <Flex gap={2} alignItems={"center"}>
                     {/* <Text color={"gray.light"}>{user.followers.length} followers</Text> */}
                     <Box w='1' h='1' bg={"gray.light"} borderRadius={"full"}></Box>
-                    <Link color={"gray.light"}>instagram.com</Link>
+                    <Link color={"gray.light"}><FaInstagram /></Link>
                 </Flex>
                 <Flex>
                     <Box className='icon-container'>
