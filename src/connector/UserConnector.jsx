@@ -2,8 +2,9 @@ import instance from "../libs/instance";
 
 export const registerUser = async (data) => {
     try {
-        const response = instance.post('/user/register', data);
-        return response.data.user;
+        const response = await instance.post('/user/register', data);
+        console.log("Regis", response.data.data)
+        return response.data.data;
     } catch (e) {
         console.error(e, "Error in registerUser API");
         throw e;
@@ -30,13 +31,23 @@ export const getUserById = async (userId) => {
     }
 };
 
-export const changeUser = async (userId, updatedData) => {
+export const changeUser = async (userId, data) => {
     try{
-        const response = await instance.put(`/user/${userId}`, updatedData)
-        console.log("Change user api:",response.data.updatedUser)
-        return response.data.updatedUser;
+        const response = await instance.put(`/user/${userId}`, data)
+        console.log("Change user api:",response.data.data)
+        return response.data.data;
     } catch (e){
         console.error(e, "Error in changeUser API");
         throw e
     }
+}
+
+export const getAllUser = async () => {
+    const res = await instance.get(`/user/all`)
+    return res.data.data
+}
+
+export const delUser = async (userId) => {
+    const res = await instance.delete(`/user/${userId}`)
+    return res.data
 }

@@ -82,11 +82,18 @@ const Navbar = ({ handleLogout }) => {
                             </Button>
                         </Link>
                     )}
-                    <Button _hover={"transparent"} >
-                        <a href="/index.html" rel="noopener noreferrer">
+                    <Button _hover={"transparent"} mx={4} >
+                        <a href="/tuner.html" rel="noopener noreferrer">
                             Tuner
                         </a>
                     </Button>
+                        {user && user.role === 'admin' && 
+                            <Link as={RouterLink} to="/admin" mx={4}>
+                                <Button _hover={"transparent"}>
+                                    Admin
+                                </Button>
+                            </Link>
+                        }
                 </Box>
             )}
         </Flex>

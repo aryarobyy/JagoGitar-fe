@@ -15,7 +15,6 @@ import ContactPage from "./pages/ContactPage"
 import LoginPage from "./pages/auth/LoginPage";
 import SignupPage from "./pages/auth/SignupPage";
 import LightDark from "./components/LightDark";
-import Sidebar from './admin/components/Sidebar';
 import DashBoard from './admin/Dashboard';
 import AdminNavbar from "./admin/components/AdminNavbar";
 import AddCourse from "./pages/course/AddCourse";
@@ -63,11 +62,10 @@ function App() {
       <Box flex="1" px={6} py={4}>
         <AdminNavbar />
         <Routes>
-        <Route path="/admin" element={<DashBoard />} />
+          <Route path="/admin" element={<DashBoard />} />
         </Routes>
       </Box>
 	  </Box>
-	  
       )}
     </Box>
   );

@@ -1,10 +1,10 @@
-import { useLocation } from "react-router-dom";
-import { Flex, Box, Text, IconButton, Input, Image, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Flex, Box, Text, IconButton, Input, Image, Menu, MenuButton, MenuList, MenuItem, Avatar, Button , Link} from "@chakra-ui/react";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
 import { useRecoilValue } from "recoil";
 import userAtom from "../../atoms/userAtom";
 
-export default function AdminNavbar({ showSidebar, setShowSidebar }) {
+export default function AdminNavbar() {
   const location = useLocation().pathname;
   const  user = useRecoilValue(userAtom);
 
@@ -34,13 +34,26 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
         <Flex align="center">
           <Menu>
             <MenuButton>
-              <Image
-                src={user.userPP}
-                borderRadius="full"
-                boxSize="3rem"
-                objectFit="cover"
-                cursor="pointer"
+            {user.userPP && (
+              <Avatar
+                  name={user.name}
+                  src={user.profilePic}
+                  size={{
+                      base: "md",
+                      md: "md",
+                  }}
               />
+          )}
+          {!user.userPP && (
+              <Avatar
+                  name={user.name}
+                  src='https://bit.ly/broken-link'
+                  size={{
+                      base: "md",
+                      md: "md",
+                  }}
+              />
+          )}
             </MenuButton>
             <MenuList>
               <MenuItem>Action</MenuItem>
@@ -50,6 +63,11 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
           </Menu>
         </Flex>
       </Flex>
+      <Link as={RouterLink} to="/" mx={4} ml={9}>
+        <Button>
+          Back
+        </Button>
+      </Link>
     </Box>
   );
 }
