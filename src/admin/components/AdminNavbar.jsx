@@ -37,7 +37,7 @@ export default function AdminNavbar() {
             {user.userPP && (
               <Avatar
                   name={user.name}
-                  src={user.profilePic}
+                  src={user.userPP}
                   size={{
                       base: "md",
                       md: "md",

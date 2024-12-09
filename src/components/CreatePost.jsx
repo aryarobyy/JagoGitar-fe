@@ -40,7 +40,7 @@ const CreatePost = () => {
 	const [posts, setPosts] = useRecoilState(postsAtom);
 	const { username } = useParams();
 	const [inputs, setInputs] = useState({
-		userId: user.userId,
+		userId: "",
 		postedBy: "",
 		text: "",
 		img: "",
@@ -74,7 +74,7 @@ const CreatePost = () => {
 		console.log("Data send: ", postData);
 
 		try{
-			const res = postForum(postData)
+			const res = await postForum(postData)
 			if (res.error) {
 				showToast("Error", res.error, "error");
 				return;

@@ -41,18 +41,16 @@ const Navbar = ({ handleLogout }) => {
                                 Courses
                             </Button>
                         </Link>
-                        <Link as={RouterLink} to="/about" mx={4}>
+                        {/* <Link as={RouterLink} to="/about" mx={4}>
                             <Button _hover={"transparent"}>
                                 About Us
                             </Button>
-                        </Link>
-                        {user && (
+                        </Link> */}
                             <Link as={RouterLink} to="/contact" mx={4}  >
                                 <Button _hover={"transparent"}>
                                     Contact
                                 </Button>
                             </Link>
-                        )}
                         {/* <Link as={RouterLink} to="/tuner" mx={4} > */}
                             <Button _hover={"transparent"} mx={4}>
                                 <a href="/tuner.html" rel="noopener noreferrer">

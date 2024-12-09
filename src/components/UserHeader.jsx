@@ -47,7 +47,7 @@ const UserHeader = ({user}) => {
         });
     };
 
-    if (!user) {
+    if (!currentUser) {
         return <Text>Loading...</Text>;
     }
 
@@ -66,19 +66,19 @@ const UserHeader = ({user}) => {
                     </Flex>
                 </Box>
                 <Box>
-                    {user.userPP && (
+                    {currentUser.userPP && (
                         <Avatar
                             name={user.name}
-                            src={user.profilePic}
+                            src={user.userPP}
                             size={{
                                 base: "md",
                                 md: "xl",
                             }}
                         />
                     )}
-                    {!user.userPP && (
+                    {!currentUser.userPP && (
                         <Avatar
-                            name={user.name}
+                            name={user.username}
                             src='https://bit.ly/broken-link'
                             size={{
                                 base: "md",

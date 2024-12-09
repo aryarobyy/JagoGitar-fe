@@ -54,7 +54,7 @@ const Conversation = ({ conversation, isOnline }) => {
 						sm: "sm",
 						md: "md",
 					}}
-					src={user.profilePic}
+					src={user.userPP}
 				>
 					{isOnline ? <AvatarBadge boxSize='1em' bg='green.500' /> : ""}
 				</Avatar>

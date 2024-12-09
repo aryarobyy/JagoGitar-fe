@@ -10,7 +10,7 @@ import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 
-const Post = ({ post }) => {
+const Post = ({ post, user }) => {
     const currentUser = useRecoilValue(userAtom);
     const navigate = useNavigate();
     const showToast = useShowToast();
@@ -28,11 +28,11 @@ const Post = ({ post }) => {
                 <Flex flexDirection={"column"} alignItems={"center"}>
                     <Avatar
                         size='md'
-                        name={post?.postedBy}
-                        src={post?.userPP}
+                        name={user?.postedBy}
+                        src={user?.userPP}
                         onClick={(e) => {
                             e.preventDefault();
-                            navigate(`/${post?.postedBy}`);
+                            navigate(`/${user?.postedBy}`);
                         }}
                     />
                     <Box w='1px' h={"full"} bg='gray.light' my={2}></Box>
