@@ -10,7 +10,7 @@ import userAtom from '../atoms/userAtom';
 
 const WelcomePage = () => {
   const user  = useRecoilValue(userAtom);
-
+console.log(user)
     return (
       <>
         {/* // <Container maxW="1440px" w="full"> */}

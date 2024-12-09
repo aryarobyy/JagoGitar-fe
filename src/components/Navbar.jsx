@@ -51,14 +51,6 @@ const Navbar = ({ handleLogout }) => {
                                     Contact
                                 </Button>
                             </Link>
-                        {/* <Link as={RouterLink} to="/tuner" mx={4} > */}
-                            <Button _hover={"transparent"} mx={4}>
-                                <a href="/tuner.html" rel="noopener noreferrer">
-                                    Tuner
-                                </a>
-                                {/* Tuner */}
-                            </Button>
-                        {/* </Link> */}
                     </MenuList>
                 </Menu>
             ) : (
@@ -68,11 +60,6 @@ const Navbar = ({ handleLogout }) => {
                             Courses
                         </Button>
                     </Link>
-                    <Link as={RouterLink} to="/about" mx={4}>
-                        <Button _hover={"transparent"}>
-                            About Us
-                        </Button>
-                    </Link>
                     {user && (
                         <Link as={RouterLink} to="/contact" mx={4}>
                             <Button _hover={"transparent"}>
@@ -80,11 +67,6 @@ const Navbar = ({ handleLogout }) => {
                             </Button>
                         </Link>
                     )}
-                    <Button _hover={"transparent"} mx={4} >
-                        <a href="/tuner.html" rel="noopener noreferrer">
-                            Tuner
-                        </a>
-                    </Button>
                         {user && user.role === 'admin' && 
                             <Link as={RouterLink} to="/admin" mx={4}>
                                 <Button _hover={"transparent"}>

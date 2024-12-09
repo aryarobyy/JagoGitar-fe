@@ -17,6 +17,8 @@ const ForumPage = () => {
     const showToast = useShowToast();
     const { user, loading} = useGetUserProfile();
     const userIds = posts.map(post => post.userId);
+    console.log("user id", user)
+    
     useEffect(() => {
         const fetchPost = async () => {
             try {
