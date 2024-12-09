@@ -4,50 +4,13 @@ import userAtom from "../atoms/userAtom";
 import { RxAvatar } from "react-icons/rx";
 import { Link as RouterLink } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
-import { BsFillChatQuoteFill } from "react-icons/bs";
 import Logo from "../assets/image/Logo.png";
-import { VscAccount } from "react-icons/vsc";
-import { getUser } from "../libs/Methods";
-import { useEffect, useState } from "react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { useBreakpointValue } from "@chakra-ui/react";
-import useLogout from "../hooks/useLogout";
 
-const Navbar = () => {
-    let [users, setUsers] = useState()
+const Navbar = ({ handleLogout }) => {
+    const user  = useRecoilValue(userAtom);
     const isMobile = useBreakpointValue({ base: true, md: false });
-    const logout = useLogout();
-    const [userData, setUserData] = useState(null);
-
-    // useEffect(() => {
-    //     if (users && users.length > 0) {
-    //         setUserData(users[0]);
-    //     }
-    //     if(localStorage.getItem("user_id")){
-    //         getUser({ _id: localStorage.getItem("user_id") })
-    //         .then(data => {
-    //             setUsers(data.data[0])
-    //         })
-    //     }
-    // }, [users]);
-    
-    const handleLogout = () => {    
-        try {
-            localStorage.removeItem("user_id");
-            location.reload();
-        } catch (error) {
-            showToast("Error", error, "error");
-        }
-    };
-    
-    if(localStorage.getItem("user_id")){
-        getUser({ _id: localStorage.getItem("user_id") })
-        .then(data => {
-            setUsers(data.data[0])
-        })
-    }
-    
-
 
     return (
         <Container maxW="1440px" w="full" >
@@ -78,26 +41,16 @@ const Navbar = () => {
                                 Courses
                             </Button>
                         </Link>
-                        <Link as={RouterLink} to="/about" mx={4}>
+                        {/* <Link as={RouterLink} to="/about" mx={4}>
                             <Button _hover={"transparent"}>
                                 About Us
                             </Button>
-                        </Link>
-                        {users && (
+                        </Link> */}
                             <Link as={RouterLink} to="/contact" mx={4}  >
                                 <Button _hover={"transparent"}>
                                     Contact
                                 </Button>
                             </Link>
-                        )}
-                        {/* <Link as={RouterLink} to="/tuner" mx={4} > */}
-                            <Button _hover={"transparent"} mx={4}>
-                                <a href="/tuner.html" rel="noopener noreferrer">
-                                    Tuner
-                                </a>
-                                {/* Tuner */}
-                            </Button>
-                        {/* </Link> */}
                     </MenuList>
                 </Menu>
             ) : (
@@ -107,28 +60,25 @@ const Navbar = () => {
                             Courses
                         </Button>
                     </Link>
-                    <Link as={RouterLink} to="/about" mx={4}>
-                        <Button _hover={"transparent"}>
-                            About Us
-                        </Button>
-                    </Link>
-                    {users && (
+                    {user && (
                         <Link as={RouterLink} to="/contact" mx={4}>
                             <Button _hover={"transparent"}>
                                 Contact
                             </Button>
                         </Link>
                     )}
-                    <Button _hover={"transparent"} >
-                        <a href="/index.html" rel="noopener noreferrer">
-                            Tuner
-                        </a>
-                    </Button>
+                        {user && user.role === 'admin' && 
+                            <Link as={RouterLink} to="/admin" mx={4}>
+                                <Button _hover={"transparent"}>
+                                    Admin
+                                </Button>
+                            </Link>
+                        }
                 </Box>
             )}
         </Flex>
                 </Flex>
-                {users && (
+                {user && (
                     <Flex alignItems={"center"} gap={4}>
                         {/* <Link as={RouterLink} to={`/chat`}>
                             <BsFillChatQuoteFill size={20} />
@@ -136,13 +86,13 @@ const Navbar = () => {
                         <Button size={"xs"} onClick={() => handleLogout()}>
                             <FiLogOut size={20} />
 							</Button>
-							<Link as={RouterLink} to={`/user/${users.username}`} mx={4}>
+							<Link as={RouterLink} to={`/user/${user.username}`} mx={4}>
                                 <RxAvatar size={24} />
                             </Link>
                     </Flex>
                 )}
 
-                {!users && (
+                {!user && (
                     <Flex>
                         <Button bg={"orange.medium"} color={"white"}>
                             <Link as={RouterLink} to="/signup">

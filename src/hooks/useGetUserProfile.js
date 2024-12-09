@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getUser } from "../libs/Methods";
+import { getUserById } from "../connector/UserConnector";
 
 const useGetUserProfile = () => {
 	const [user, setUser] = useState(null);
@@ -10,8 +10,8 @@ const useGetUserProfile = () => {
 			try {
 				const userId = localStorage.getItem("user_id");
 				if (userId) {
-					const data = await getUser({ _id: userId });
-					setUser(data.data);
+					const user = await getUserById(userId);
+					setUser(user);
 				}
 			} catch (error) {
 				console.error("Error fetching user profile:", error);
@@ -19,7 +19,6 @@ const useGetUserProfile = () => {
 				setLoading(false);
 			}
 		};
-
 		fetchUserProfile();
 	}, []);
 

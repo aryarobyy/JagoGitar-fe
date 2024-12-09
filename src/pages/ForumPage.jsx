@@ -5,38 +5,60 @@ import useShowToast from "../hooks/useShowToast";
 import Post from "../components/Post";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
-import { getPost } from "../libs/Methods";
 import useGetUserProfile from "../hooks/useGetUserProfile";
+import { getAllForum, getForum } from "../connector/ForumConnector";
+import LoginPage from "./auth/LoginPage";
+import { getUserById } from "../connector/UserConnector";
 
 const ForumPage = () => {
-    const { pid } = useParams();  // Get the post ID from URL parameters
+    const { forumId } = useParams();
     const [posts, setPosts] = useRecoilState(postsAtom);
+    const [userData, setUserData] = useState({});
     const showToast = useShowToast();
     const { user, loading} = useGetUserProfile();
-
-    console.log("Ini user: ",user)
-
+    const userIds = posts.map(post => post.userId);
+    console.log("user id", user)
+    
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const postResponse = await getPost({ _id: pid });
-                console.log("Post Response: ", postResponse.data);
-                if (postResponse.error) {
-                    showToast("Error", postResponse.error, "error");
-                    return;
+                const forumData = await getAllForum(); 
+
+                if (!forumData) {
+                    setPosts([]);
+                    showToast("Info", "Forum not found", "info");
+                } else {
+                    setPosts(forumData);
                 }
-                // if (Array.isArray(postResponse.data)) {
-                //     setPosts(postResponse.data);
-                // } 
-                setPosts(Array.isArray(postResponse.data) ? postResponse.data : [postResponse.data]);
             } catch (error) {
+                console.error("Error fetching forum:", error);
                 showToast("Error", error.message, "error");
-                // setLoading(false);
             }
         };
         fetchPost();
-    }, [pid, showToast, setPosts]);
+    }, [forumId, showToast, setPosts]);
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            if(userIds.length < 0)return;
+            try{
+                const users = await getUserById(userIds);
+                const usersMap = users.reduce((map, user) => {
+                    map[user.id] = user;
+                    return map;
+                }, {})
+                setUserData(usersMap);
+            }catch(e){
+                console.error("Error fetching user data:", e);
+                    showToast("Error", "Failed to fetch user data", "error");
+            }
+        }
+        fetchUser();
+    }, [userIds, showToast])
+
+    if (!user) {
+        return <LoginPage />;
+    }
     if (loading) {
         return (
             <Flex justify='center' align='center' h='100vh'>
@@ -44,6 +66,7 @@ const ForumPage = () => {
             </Flex>
         );
     }
+    
 
     return (
         <Flex gap='10' alignItems={"flex-start"}>
@@ -51,8 +74,11 @@ const ForumPage = () => {
                 {posts.length === 0 ? (
                     <h1>No posts available</h1>
                 ) : (
-                    posts.map((post) => (
-                        <Post key={post._id} post={post} user={user} />
+                    posts
+                    .slice() 
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .map((post) => (
+                        <Post key={post.forumId} post={post} user={userData[post.userId]}/>
                     ))
                 )}
             </Box>

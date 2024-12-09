@@ -21,7 +21,7 @@ const CourseCard = ({ course }) => {
       transition="background-color 0.3s"
     >
       <Flex justify="space-between" align="center" p={4} borderBottom="1px solid #e2e8f0">
-        <Image src={course.img} alt={course.title} boxSize="100px" width="200px" objectFit="cover" borderRadius="md" />
+        <Image src={course.imgUrl} alt={course.title} boxSize="100px" width="200px" objectFit="cover" borderRadius="md" />
         <Box flex="1" mx={4} ml={12}>
           <Text fontWeight="bold">{course.title}</Text>
           {course.tag && (
@@ -32,13 +32,13 @@ const CourseCard = ({ course }) => {
           <Text fontSize="sm">{course.totalHours} • {course.updated}</Text>
           <Flex alignItems="center">
             <Icon as={FaUser} />
-            <Text fontWeight="bold" ml={2}>{course.profile}</Text>
+            <Text fontWeight="bold" ml={2}>{course.postedBy}</Text>
           </Flex>
           <Flex align="center" mt={3}>
             <Icon as={FaStar} color="yellow.500" />
             <Text ml={1}>{course.rating}</Text>
             <Icon as={FaRegEye} ml={5} />
-            <Text ml={1}>{course.students.toLocaleString()}</Text>
+            <Text ml={1}>{course.students}</Text>
           </Flex>
         </Box>
         <Flex direction="column" align="flex-end">

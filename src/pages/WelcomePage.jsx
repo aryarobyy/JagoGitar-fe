@@ -3,33 +3,18 @@ import React, { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import Post from "../assets/image/icon.png";
 import { useRecoilValue } from 'recoil';
-import Main from "../assets/image/main.png"
-import Logo from "../assets/image/Logo.png";
-import Dekstop2 from "../assets/image/dekstop2.png"
-import Dekstop1 from "../assets/image/dekstop1.png"
 import AdeS from "../assets/image/adeS.png"
 import HarryV from "../assets/image/harryV.png"
 import AryaN from "../assets/image/aryaN.png"
-import { getUser } from '../libs/Methods';
+import userAtom from '../atoms/userAtom';
+
 const WelcomePage = () => {
-    let [user,setUser] = useState()
-
-    if(localStorage.getItem("user_id")){
-      getUser({ "_id": localStorage.getItem("user_id") })
-      .then(data => {
-        setUser(data.data[0])
-      })
-    }
-
+  const user  = useRecoilValue(userAtom);
+console.log(user)
     return (
       <>
         {/* // <Container maxW="1440px" w="full"> */}
         <Box  justifyItems={"center"} alignItems={"center"} justifyContent={"center"}>
-          {/* <Flex justify="center" align="center">
-            <Link as={RouterLink} to="/">
-              <Image src={Logo} alt="JagoGitar Logo" />
-            </Link>
-          </Flex> */}
             <Flex
                 direction={{ base: 'column', md: 'row' }}
                 align="center"

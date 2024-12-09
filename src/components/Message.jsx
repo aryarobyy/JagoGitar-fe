@@ -53,7 +53,7 @@ const Message = ({ ownMessage, message }) => {
 						</Flex>
 					)}
 
-					<Avatar src={user.profilePic} w='7' h={7} />
+					<Avatar src={user.userPP} w='7' h={7} />
 				</Flex>
 			) : (
 				<Flex gap={2}>

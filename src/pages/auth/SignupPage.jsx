@@ -21,7 +21,7 @@ import { useSetRecoilState } from "recoil";
 import useShowToast from "../../hooks/useShowToast";
 import userAtom from "../../atoms/userAtom";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import {createUser} from '../../libs/Methods'
+import { registerUser } from "../../connector/UserConnector";
 
 export default function SignupPage() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -30,28 +30,24 @@ export default function SignupPage() {
 		username: "",
 		email: "",
 		password: "",
-		photo: "null",
+		userPP: "null",
 	});
 	const navigate = useNavigate();
 
 	const showToast = useShowToast();
 	const setUser = useSetRecoilState(userAtom);
 
-	const handleSignup = () => {
-		createUser(inputs)
-		.then(data => {
-			console.log('User creation response:', data);
-			if (data.status = 201) {
-				navigate("/login")
-				localStorage.setItem("user_id", data.data[0]._id);
-				showToast("Success", "User created successfully!", "success");
-				setUser(data);
-				console.log(data)
-			} else {
-				showToast("Error", data.error, "error");
-			}
+	const handleSignup = async () => {
+		try{
+			const data  = await registerUser(inputs)
+			navigate('/login')
 			console.log(data)
-		})
+			localStorage.setItem("user_id", data.userId);
+			showToast("Success", "User created successfully!", "success");
+			setUser(data)
+		} catch (e) {
+			console.error(e)
+		}
 	};
 
 	return (

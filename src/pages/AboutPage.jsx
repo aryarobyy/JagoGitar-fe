@@ -1,32 +1,16 @@
 import { Box, Flex, Image, Text, Heading, Stack, Icon, IconButton } from '@chakra-ui/react';
 import { FaInstagram } from "react-icons/fa";
 import React from 'react';
-import Rolis from "../assets/image/rolis.png"
 import Roby from "../assets/image/roby.png"
-import Rama from "../assets/image/Rama.png"
 
 const teamMembers = [
     {
-        name: "Rolis Liu",
-        role: "UI/UX Designer",
-        image: Rolis,
-        description: "Lebih baik main gitar, dari pada mainin perasaan",
-        instagram: "https://instagram.com/rolisliu0/"
-    },
-    {
         name: "Roby Aryanata",
-        role: "Front-End Developer",
+        role: "Full Stack Developer",
         image: Roby,
-        description: "Cape belajar itu wajar, yg gak wajar itu kegantengan seorang Roby ",
+        description: "",
         instagram: "https://instagram.com/aryarobyy/"
     },
-    {
-        name: "Rama Nusa Bakti",
-        role: "Back-End Developer",
-        image: Rama,
-        description: "Tidak ada ide untuk memimirkan kata-kata. Paham!!! " ,
-        instagram: "https://instagram.com/noosabaktee/"
-    }
 ];
 
 const handleInstagramClick = (url) => {
@@ -39,6 +23,9 @@ const AboutPage = () => {
             <Heading as="h1" textAlign="center" mb={10}>
                 About Us
             </Heading>
+            <Text textAlign={"center"}>
+                Web yang belum 100% rampung karena masih banyak bug
+            </Text>
             <Flex direction={{ base: 'column', md: 'row' }} align="center" justify="center">
                 {teamMembers.map((member, index) => (
                     <Box

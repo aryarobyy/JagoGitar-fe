@@ -5,38 +5,34 @@ import { Portal } from "@chakra-ui/portal";
 import { Button, useToast } from "@chakra-ui/react";
 import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
-import { useRecoilValue } from "recoil";
-import userAtom from "../atoms/userAtom";
 import { Link as RouterLink } from "react-router-dom";
-import follow from "../hooks/useFollowUnfollow";
+// import follow from "../hooks/useFollowUnfollow";
 import CustomButton from "../utils/CustomButton";
 // import UserLiked from "./UserLiked";
-import Post from "./Post";
 import { useState, useEffect } from "react";
-import { getFollow } from "../libs/Methods";
+import { FaInstagram } from "react-icons/fa"; 
 
-const UserHeader = ({ user }) => {
+const UserHeader = ({user}) => {
     const toast = useToast();
-    const currentUser = user;
+    const currentUser = user ;
     const my_id = localStorage.getItem("user_id")
     const [following,setFollowing] = useState(false)
     const [activeTab, setActiveTab] = useState("posts","likes");
-
     // getFollow({ user_id: my_id,following: user._id }).then((data) => {
     //     if(data.status == 200) setFollowing(true)
     // })
 
-    useEffect(() => {
-        if (user && user._id) {
-            getFollow({ user_id: my_id, following: user._id }).then((data) => {
-                if (data.status === 200) setFollowing(true);
-            });
-        }
-    }, [user]);
+    // useEffect(() => {
+        // if (user && user.userId) {
+        //     getFollow({ user_id: my_id, following: user.userId }).then((data) => {
+        //         if (data.status === 200) setFollowing(true);
+        //     });
+        // }
+    // }, [user]);
 
-    const handleFollow = () => {
-        follow(currentUser,my_id,setFollowing)
-    }
+    // const handleFollow = () => {
+    //     follow(currentUser,my_id,setFollowing)
+    // }
 
     const copyURL = () => {
         const currentURL = window.location.href;
@@ -51,7 +47,7 @@ const UserHeader = ({ user }) => {
         });
     };
 
-    if (!user) {
+    if (!currentUser) {
         return <Text>Loading...</Text>;
     }
 
@@ -60,29 +56,29 @@ const UserHeader = ({ user }) => {
             <Flex justifyContent={"space-between"} w={"full"}>
                 <Box>
                     <Text fontSize={"2xl"} fontWeight={"bold"}>
-                        {user.name}
+                        {currentUser.name}
                     </Text>
                     <Flex gap={2} alignItems={"center"}>
-                        <Text fontSize={"sm"}>{user.username}</Text>
+                        <Text fontSize={"sm"}>{currentUser.username}</Text>
                         <Text fontSize={"xs"} bg={"orange.medium"} color={"gray.light"} p={1} borderRadius={"full"}>
                             JagoGitar.net
                         </Text>
                     </Flex>
                 </Box>
                 <Box>
-                    {user.profilePic && (
+                    {currentUser.userPP && (
                         <Avatar
                             name={user.name}
-                            src={user.profilePic}
+                            src={user.userPP}
                             size={{
                                 base: "md",
                                 md: "xl",
                             }}
                         />
                     )}
-                    {!user.profilePic && (
+                    {!currentUser.userPP && (
                         <Avatar
-                            name={user.name}
+                            name={user.username}
                             src='https://bit.ly/broken-link'
                             size={{
                                 base: "md",
@@ -95,21 +91,21 @@ const UserHeader = ({ user }) => {
 
             <Text>{user.bio}</Text>
 
-            {currentUser._id === my_id && (
-                <Link as={RouterLink} to='/update'>
+            {currentUser.userId === my_id && (
+                <Link as={RouterLink} to={`/update/${currentUser.userId}`}>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
             )}
-            {currentUser._id !== my_id && (
+            {/* {currentUser.userId !== my_id && (
                 <Button size={"sm"} onClick={() => handleFollow()}>
                     {following ? "Unfollow" : "Follow"}
                 </Button>
-            )}
+            )} */}
             <Flex w={"full"} justifyContent={"space-between"}>
                 <Flex gap={2} alignItems={"center"}>
                     {/* <Text color={"gray.light"}>{user.followers.length} followers</Text> */}
                     <Box w='1' h='1' bg={"gray.light"} borderRadius={"full"}></Box>
-                    <Link color={"gray.light"}>instagram.com</Link>
+                    <Link color={"gray.light"}><FaInstagram /></Link>
                 </Flex>
                 <Flex>
                     <Box className='icon-container'>
