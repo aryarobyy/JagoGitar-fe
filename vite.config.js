@@ -11,8 +11,15 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['@chakra-ui/react', '@emotion/react', '@emotion/styled', 'framer-motion'],
+    include: [
+      '@chakra-ui/react',
+      '@chakra-ui/system',
+      '@emotion/react',
+      '@emotion/styled',
+      'framer-motion',
+    ],
   },
+  
   server: {
     port: 3000,
     open: true, 
