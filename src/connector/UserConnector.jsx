@@ -23,7 +23,7 @@ export const loginUser = async (data) => {
 
 export const getUserById = async (userId) => {
     try {
-        const response = await instance.get(`/user/${userId}`);
+        const response = await instance.get(`/user/id/${userId}`);
         return response.data.data; 
     } catch (e) {
         console.error(e, "Error in getUserById API");
@@ -58,7 +58,6 @@ export const regisMentor = async (data) => {
 }
 
 export const getUserByUsername = async (username) => {
-    const res = await instance.get(`/user/${username}`)
-    console.log("Response api: ", res.data.data)
+    const res = await instance.get(`/user/username/${username}`)
     return res.data.data
 }

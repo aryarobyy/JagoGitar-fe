@@ -14,7 +14,7 @@ import {
 	Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { GrFormViewHide, GrFormView } from "react-icons/gr";
 import { useSetRecoilState } from "recoil";
 import useShowToast from "../../hooks/useShowToast";
 import userAtom from "../../atoms/userAtom";
@@ -94,7 +94,7 @@ export default function LoginPage() {
 										variant={"ghost"}
 										onClick={() => setShowPassword((showPassword) => !showPassword)}
 									>
-										{showPassword ? <ViewIcon /> : <ViewOffIcon />}
+										{showPassword ? <GrFormView /> : <GrFormViewHide />}
 									</Button>
 								</InputRightElement>
 							</InputGroup>

@@ -5,7 +5,7 @@ import { RxAvatar } from "react-icons/rx";
 import { Link as RouterLink } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 import Logo from "../assets/image/Logo.png";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { useBreakpointValue } from "@chakra-ui/react";
 
 const Navbar = ({ handleLogout }) => {
@@ -32,7 +32,7 @@ const Navbar = ({ handleLogout }) => {
                     <MenuButton
                         as={IconButton}
                         aria-label='Options'
-                        icon={<HamburgerIcon />}
+                        icon={<GiHamburgerMenu />}
                         variant='outline'
                     />
                     <MenuList mr={'8vh'}>

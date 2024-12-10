@@ -17,7 +17,8 @@ const ForumPage = () => {
     const showToast = useShowToast();
     const { user, loading} = useGetUserProfile();
     const userIds = posts.map(post => post.userId);
-    console.log("user id", user)
+    console.log("user id", userIds)
+    console.log("User data: ", userData)
     
     useEffect(() => {
         const fetchPost = async () => {
@@ -40,21 +41,29 @@ const ForumPage = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            if(userIds.length < 0)return;
-            try{
-                const users = await getUserById(userIds);
+            if (userIds.length === 0) return; 
+    
+            try {
+                const users = await Promise.all(userIds.map(id => getUserById(id)));
+                console.log("Users: ", users);
+    
                 const usersMap = users.reduce((map, user) => {
-                    map[user.id] = user;
+                    if (user) {
+                        map[user.userId] = user;
+                    }
                     return map;
-                }, {})
+                }, {});
+    
                 setUserData(usersMap);
-            }catch(e){
+            } catch (e) {
                 console.error("Error fetching user data:", e);
-                    showToast("Error", "Failed to fetch user data", "error");
+                showToast("Error", "Failed to fetch user data", "error");
             }
-        }
+        };
+    
         fetchUser();
-    }, [userIds, showToast])
+    }, [userIds, showToast]);
+    
 
     if (!user) {
         return <LoginPage />;

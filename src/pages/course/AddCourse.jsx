@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { GrAdd } from "react-icons/gr";
 import {
 	Button,
 	FormControl,
@@ -104,7 +104,7 @@ const AddCourse = () => {
 
 	return (
 		<>
-			<Button onClick={onOpen}><AddIcon /></Button>
+			<Button onClick={onOpen}><GrAdd /></Button>
 
 			<Modal isOpen={isOpen} onClose={onClose} size="xl">
 				<ModalOverlay />

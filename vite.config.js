@@ -3,10 +3,16 @@ import react from "@vitejs/plugin-react";
 import { resolve } from 'path'
 
 export default defineConfig({
-  assetsInclude: ["**/*.html"],
-
+  assetsInclude: ['**/*.html'],
   plugins: [react()],
-
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
+  optimizeDeps: {
+    include: ['@chakra-ui/react', '@emotion/react', '@emotion/styled', 'framer-motion'],
+  },
   server: {
     port: 3000,
     open: true, 
@@ -24,12 +30,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main : resolve(__dirname, './index.html'),
+        main: resolve(__dirname, 'index.html')
       },
     },
-  },
-
-  optimizeDeps: {
-    include: ["react", "react-dom"], 
+    chunkSizeWarningLimit: 1000,
   },
 });

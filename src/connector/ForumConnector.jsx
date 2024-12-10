@@ -24,3 +24,9 @@ export const deleteForum = async (forumId) => {
     const res = await instance.delete(`/forum/${forumId}`)
     return res.data
 }
+
+export const postComment = async (data) => {
+    const res = await instance.post(`/forum/reply`, data)
+    console.log(res)
+    return res.data.data
+}

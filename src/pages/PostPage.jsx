@@ -1,5 +1,4 @@
-import { Avatar, Box, Button, Divider, Flex, Image, Spinner, Text } from "@chakra-ui/react";
-// import Actions from "../components/Actions";
+import { Avatar, Box, Button, Divider, Flex, Image, Input, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
 import useGetUserProfile from "../hooks/useGetUserProfile";
@@ -8,55 +7,117 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { deleteForum, getForum } from "../connector/ForumConnector";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { deleteForum, getForum, postComment } from "../connector/ForumConnector";
 import { getUserById } from "../connector/UserConnector";
+import { IoSendSharp } from "react-icons/io5";
 
 const PostPage = () => {
-    const { forumId } = useParams();  
+    const { forumId } = useParams();
     const { user } = useGetUserProfile();
-    const [post, setPost] = useState(null); 
+    const [post, setPost] = useState(null);
     const [postAuthor, setPostAuthor] = useState(null);
     const showToast = useShowToast();
     const navigate = useNavigate();
     const loggedInUser = useRecoilValue(userAtom);
+    const [comment, setComment] = useState([])
+    const [commentData, setCommentData] = useState([])
+    const [inputs, setInputs] = useState({
+        title: "",
+        text: "",
+    });
+    const userIds = comment?.replies?.map(reply => reply.userId) || [];
+    console.log("Comment data", commentData)
+
     useEffect(() => {
         const fetchPost = async () => {
-            try{
-                const forumData = await getForum(forumId);
-                if(forumData.error) {
+            try {
+                const data = await getForum(forumId);
+                setPost(data);
+                if (data.error) {
                     showToast("Error", data.error, "error");
                     return;
-                    }
-                    setPost(forumData);
-
-                const userId = forumData.userId;
-                const userData = await getUserById(userId);
-                if(userData.error) {
-                    showToast("Error", data.error, "error");
-                    return;
-                    }
-                setPostAuthor(userData)
-            } catch (e){
-                console.error(e)
+                }
+                
+                setComment(data.replies || []);
+            } catch (e) {
+                console.log("Error getting forum data :", e);
             }
+        };
+        fetchPost();
+    }, [forumId, showToast]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const userId = post?.userId;
+                const userData = await getUserById(userId);
+                setPostAuthor(userData);
+                
+                if (userData.error) {
+                    showToast("Error", userData.error, "error");
+                    return;
+                }
+    
+                const replyUserIds = post.replies ? 
+                    [...new Set(post.replies.map(reply => reply.userId).filter(id => id))] 
+                    : [];
+    
+                if (replyUserIds.length === 0) return;
+    
+                const commentByData = await Promise.all(
+                    replyUserIds.map(id => getUserById(id))
+                );
+    
+                const usersMap = {
+                    [userId]: userData, 
+                    ...commentByData.reduce((map, user) => {
+                        if (user && user.userId) {
+                            map[user.userId] = user;
+                        }
+                        return map;
+                    }, {})
+                };
+    
+                setCommentData(usersMap);
+            } catch (e) {
+                console.error("Error fetching user: ", e);
+            }
+        };
+    
+        if (post) fetchUser();
+    }, [post, showToast]);
+
+
+
+    const handlePostComment = async () => {
+        const commentData = { ...inputs, forumId, userId: loggedInUser.userId };
+        try {
+            const data = await postComment(commentData);
+            if (data.error) {
+                showToast("Error", data.error, "error");
+                return;
+            }
+            setComment((prevComments) => [...prevComments, data]);
+            setInputs({ ...inputs, text: "" });
+            window.location.reload()
+        } catch (e) {
+            console.error("Failed to post comment", e);
         }
-        fetchPost()
-    }, [forumId, showToast])
+    };
 
     const handleDeletePost = async () => {
-        try{
+        try {
             if (!window.confirm("Are you sure you want to delete this post?")) return;
             const res = await deleteForum(forumId);
-            console.log(res)
-            if(res.error) {
+            if (res.error) {
                 showToast("Error", res.error, "error");
                 return;
-                }
-            showToast("Success", "Post Deleted", "Success")
-            navigate(`/user/${user.username}`)
-        }catch(e){
-            console.error(e)
+            }
+            showToast("Success", "Post Deleted", "success");
+            navigate(`/user/${user.username}`);
+        } catch (e) {
+            console.error(e);
         }
     };
 
@@ -73,7 +134,7 @@ const PostPage = () => {
         <Box p={4}>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
                 <Flex alignItems="center" gap={3}>
-                    <Avatar src={postAuthor?.profilePic} size="md" name={postAuthor?.username} />
+                    <Avatar src={postAuthor?.userPP} size="md" name={postAuthor?.username} />
                     <Flex flexDirection="column">
                         <Text fontSize="sm" fontWeight="bold">{postAuthor?.username || "Unknown User"}</Text>
                         <Image src='/verified.png' w={4} h={4} />
@@ -84,7 +145,7 @@ const PostPage = () => {
                         {formattedDate} ago
                     </Text>
                     {loggedInUser?.userId === post.userId && (
-                        <DeleteIcon size={20} cursor="pointer" onClick={handleDeletePost} />
+                        <RiDeleteBin5Line size={20} cursor="pointer" onClick={handleDeletePost} />
                     )}
                 </Flex>
             </Flex>
@@ -108,12 +169,31 @@ const PostPage = () => {
             </Flex>
 
             <Divider my={4} />
-
-            {post.replies && post.replies.map((reply) => (
+            <Flex gap={2} alignItems="center" mb={4}>
+                <Input
+                    placeholder="Tambahkan komentar..."
+                    variant="outline"
+                    size="md"
+                    onChange={(e) =>
+                        setInputs((prev) => ({
+                            ...prev,
+                            text: e.target.value,
+                        }))
+                    }
+                    value={inputs.text}
+                />
+                <Button onClick={handlePostComment}><IoSendSharp /></Button>
+            </Flex>
+            {post.replies && post.replies.map((reply, index) => (
                 <Comment
-                    key={reply._id}
-                    reply={reply}
-                    lastReply={reply._id === post.replies[post.replies.length - 1]._id}
+                    comment={{
+                        ...reply,
+                        userPP: commentData[reply.userId]?.userPP,
+                        username: commentData[reply.userId]?.username
+                    }}
+                    postAuthor={postAuthor}
+                    lastReply={index === post.replies.length - 1}
+                    key={reply.commentId || index}
                 />
             ))}
         </Box>

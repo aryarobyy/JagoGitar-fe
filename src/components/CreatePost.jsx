@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { IoMdAdd } from "react-icons/io";
 import {
 	Button,
 	CloseButton,
@@ -104,7 +104,7 @@ const CreatePost = () => {
 					w={{ base: 7, sm: 8, md: 9, lg: 12 }}
 					h={{ base: 7, sm: 8, md: 9, lg: 12 }}
 				>
-					<AddIcon />
+					<IoMdAdd />
 				</Button>
 
 				<Modal isOpen={isOpen} onClose={onClose}>

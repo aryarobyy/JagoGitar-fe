@@ -5,7 +5,7 @@ import { Box, Flex, Text } from "@chakra-ui/layout";
 import { Link, useNavigate } from "react-router-dom";
 // import Actions from "./Actions";
 import { formatDistanceToNow, isValid, parseISO } from "date-fns";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { MdDelete } from "react-icons/md";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
