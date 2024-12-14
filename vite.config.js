@@ -1,9 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { resolve } from 'path'
+import { resolve } from 'path';
 
 export default defineConfig({
-  assetsInclude: ['**/*.html'],
   plugins: [react()],
   resolve: {
     alias: {
@@ -14,12 +13,8 @@ export default defineConfig({
     include: [
       '@chakra-ui/react',
       '@chakra-ui/system',
-      '@emotion/react',
-      '@emotion/styled',
-      'framer-motion',
     ],
   },
-  
   server: {
     port: 3000,
     open: true, 
@@ -31,15 +26,9 @@ export default defineConfig({
       },
     },
   },
-
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      },
-    },
     chunkSizeWarningLimit: 1000,
   },
 });
